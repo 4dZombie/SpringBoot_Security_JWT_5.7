@@ -28,6 +28,14 @@ public class User extends ExtendedAuditEntity {
 
   @Column(name = "password")
   private String password;
+  @Column(name = "brithdate")
+  private Date brithdate;
+  @Column(name = "employment")
+  private String employment;
+  @Column(name = "kids")
+  private String kids;
+  @Column(name = "student")
+  private String student;
 
   @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(

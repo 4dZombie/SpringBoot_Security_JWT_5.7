@@ -10,3 +10,10 @@ build/
 # Ignore application.properties files
 src/main/resources/application.properties
 
+*.properties
+build/classes/java/main/META-INF/spring-configuration-metadata.json
+build/generated/sources/annotationProcessor/java/main/com/example/jwt/domain/authority/dto/AuthorityMapperImpl.java
+build/generated/sources/annotationProcessor/java/main/com/example/jwt/domain/role/dto/RoleMapperImpl.java
+build/generated/sources/annotationProcessor/java/main/com/example/jwt/domain/user/dto/UserMapperImpl.java
+build/resources/main/application.properties
+build/tmp/compileJava/previous-compilation-data.bin
