@@ -17,3 +17,4 @@ build/generated/sources/annotationProcessor/java/main/com/example/jwt/domain/rol
 build/generated/sources/annotationProcessor/java/main/com/example/jwt/domain/user/dto/UserMapperImpl.java
 build/resources/main/application.properties
 build/tmp/compileJava/previous-compilation-data.bin
+build/resources/main/application.properties
