@@ -2,6 +2,8 @@ package com.example.jwt.domain.user.dto;
 
 import com.example.jwt.domain.authority.Authority;
 import com.example.jwt.domain.authority.dto.AuthorityDTO;
+import com.example.jwt.domain.calendar.Calendar;
+import com.example.jwt.domain.calendar.dto.CalendarDTO;
 import com.example.jwt.domain.role.Role;
 import com.example.jwt.domain.role.dto.RoleDTO;
 import com.example.jwt.domain.user.User;
@@ -14,8 +16,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-11-07T18:11:10+0100",
-    comments = "version: 1.5.5.Final, compiler: IncrementalProcessingEnvironment from gradle-language-java-7.5.jar, environment: Java 17.0.4 (Amazon.com Inc.)"
+    date = "2023-12-06T10:38:44+0100",
+    comments = "version: 1.5.5.Final, compiler: IncrementalProcessingEnvironment from gradle-language-java-7.5.jar, environment: Java 17.0.9 (Eclipse Adoptium)"
 )
 @Component
 public class UserMapperImpl implements UserMapper {
@@ -33,6 +35,7 @@ public class UserMapperImpl implements UserMapper {
         user.setLastName( dto.getLastName() );
         user.setEmail( dto.getEmail() );
         user.setRoles( roleDTOSetToRoleSet( dto.getRoles() ) );
+        user.setCalendars( calendarDTOSetToCalendarSet( dto.getCalendars() ) );
 
         return user;
     }
@@ -78,6 +81,7 @@ public class UserMapperImpl implements UserMapper {
         userDTO.setLastName( BO.getLastName() );
         userDTO.setEmail( BO.getEmail() );
         userDTO.setRoles( roleSetToRoleDTOSet( BO.getRoles() ) );
+        userDTO.setCalendars( calendarSetToCalendarDTOSet( BO.getCalendars() ) );
 
         return userDTO;
     }
@@ -180,6 +184,33 @@ public class UserMapperImpl implements UserMapper {
         return set1;
     }
 
+    protected Calendar calendarDTOToCalendar(CalendarDTO calendarDTO) {
+        if ( calendarDTO == null ) {
+            return null;
+        }
+
+        Calendar calendar = new Calendar();
+
+        calendar.setId( calendarDTO.getId() );
+        calendar.setStartDate( calendarDTO.getStartDate() );
+        calendar.setEndDate( calendarDTO.getEndDate() );
+
+        return calendar;
+    }
+
+    protected Set<Calendar> calendarDTOSetToCalendarSet(Set<CalendarDTO> set) {
+        if ( set == null ) {
+            return null;
+        }
+
+        Set<Calendar> set1 = new LinkedHashSet<Calendar>( Math.max( (int) ( set.size() / .75f ) + 1, 16 ) );
+        for ( CalendarDTO calendarDTO : set ) {
+            set1.add( calendarDTOToCalendar( calendarDTO ) );
+        }
+
+        return set1;
+    }
+
     protected AuthorityDTO authorityToAuthorityDTO(Authority authority) {
         if ( authority == null ) {
             return null;
@@ -228,6 +259,33 @@ public class UserMapperImpl implements UserMapper {
         Set<RoleDTO> set1 = new LinkedHashSet<RoleDTO>( Math.max( (int) ( set.size() / .75f ) + 1, 16 ) );
         for ( Role role : set ) {
             set1.add( roleToRoleDTO( role ) );
+        }
+
+        return set1;
+    }
+
+    protected CalendarDTO calendarToCalendarDTO(Calendar calendar) {
+        if ( calendar == null ) {
+            return null;
+        }
+
+        CalendarDTO calendarDTO = new CalendarDTO();
+
+        calendarDTO.setId( calendar.getId() );
+        calendarDTO.setStartDate( calendar.getStartDate() );
+        calendarDTO.setEndDate( calendar.getEndDate() );
+
+        return calendarDTO;
+    }
+
+    protected Set<CalendarDTO> calendarSetToCalendarDTOSet(Set<Calendar> set) {
+        if ( set == null ) {
+            return null;
+        }
+
+        Set<CalendarDTO> set1 = new LinkedHashSet<CalendarDTO>( Math.max( (int) ( set.size() / .75f ) + 1, 16 ) );
+        for ( Calendar calendar : set ) {
+            set1.add( calendarToCalendarDTO( calendar ) );
         }
 
         return set1;

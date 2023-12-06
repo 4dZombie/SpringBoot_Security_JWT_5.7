@@ -1,6 +1,7 @@
 package com.example.jwt.domain.user.dto;
 
 import com.example.jwt.core.generic.ExtendedDTO;
+import com.example.jwt.domain.calendar.dto.CalendarDTO;
 import com.example.jwt.domain.role.dto.RoleDTO;
 import java.util.Set;
 import java.util.UUID;
@@ -18,16 +19,18 @@ public class UserDTO extends ExtendedDTO {
 
   @Valid
   private Set<RoleDTO> roles;
+  private Set<CalendarDTO> calendars;
 
   public UserDTO() {
   }
 
-  public UserDTO(UUID id, String firstName, String lastName, String email, Set<RoleDTO> roles) {
+  public UserDTO(UUID id, String firstName, String lastName, String email, Set<RoleDTO> roles, Set<CalendarDTO> calendars) {
     super(id);
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
     this.roles = roles;
+    this.calendars = calendars;
   }
 
   public String getFirstName() {
@@ -63,6 +66,15 @@ public class UserDTO extends ExtendedDTO {
 
   public UserDTO setRoles(Set<RoleDTO> roles) {
     this.roles = roles;
+    return this;
+  }
+
+  public Set<CalendarDTO> getCalendars() {
+    return calendars;
+  }
+
+  public UserDTO setCalendars(Set<CalendarDTO> calendars) {
+    this.calendars = calendars;
     return this;
   }
 }

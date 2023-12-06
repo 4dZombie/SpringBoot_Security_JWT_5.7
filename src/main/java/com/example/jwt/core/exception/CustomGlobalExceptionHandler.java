@@ -16,13 +16,14 @@ public class CustomGlobalExceptionHandler {
 
   //May be used for further ExceptionHandlers
   //messageSource.getMessage("errors.exception.message", null, LocaleContextHolder.getLocale())
+  /*
   private final MessageSource messageSource;
 
   @Autowired
   public CustomGlobalExceptionHandler(MessageSource messageSource) {
     this.messageSource = messageSource;
   }
-
+*/
   @ExceptionHandler(MethodArgumentNotValidException.class)
   @ResponseStatus(value = HttpStatus.BAD_REQUEST)
   public ResponseError handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
