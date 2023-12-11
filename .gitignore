@@ -6,6 +6,10 @@ target/
 .gradle
 build/
 
+# Ignore Dockerfiles
+Dockerfile
+docker-compose.yml
+
 
 # Ignore application.properties files
 src/main/resources/application.properties
