@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-12-12T09:30:38+0100",
+    date = "2023-12-12T16:25:49+0100",
     comments = "version: 1.5.5.Final, compiler: IncrementalProcessingEnvironment from gradle-language-java-7.5.jar, environment: Java 17.0.9 (Eclipse Adoptium)"
 )
 @Component
@@ -192,6 +192,7 @@ public class UserMapperImpl implements UserMapper {
         Calendar calendar = new Calendar();
 
         calendar.setId( calendarDTO.getId() );
+        calendar.setTitle( calendarDTO.getTitle() );
         calendar.setStartDate( calendarDTO.getStartDate() );
         calendar.setEndDate( calendarDTO.getEndDate() );
 
@@ -274,6 +275,7 @@ public class UserMapperImpl implements UserMapper {
         calendarDTO.setId( calendar.getId() );
         calendarDTO.setStartDate( calendar.getStartDate() );
         calendarDTO.setEndDate( calendar.getEndDate() );
+        calendarDTO.setTitle( calendar.getTitle() );
 
         return calendarDTO;
     }

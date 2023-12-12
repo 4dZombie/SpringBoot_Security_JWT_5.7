@@ -6,14 +6,16 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 public class CalendarDTO extends ExtendedDTO {
+    private String title;
     private LocalDate startDate;
     private LocalDate endDate;
 
     public CalendarDTO() {
     }
 
-    public CalendarDTO(UUID id, LocalDate startDate, LocalDate endDate) {
+    public CalendarDTO(UUID id,String title, LocalDate startDate, LocalDate endDate) {
         super(id);
+        this.title = title;
         this.startDate = startDate;
         this.endDate = endDate;
     }
@@ -35,4 +37,14 @@ public class CalendarDTO extends ExtendedDTO {
         this.endDate = endDate;
         return this;
     }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public CalendarDTO setTitle(String title) {
+        this.title = title;
+        return this;
+    }
+
 }

@@ -5,11 +5,21 @@ import com.example.jwt.core.generic.ExtendedServiceImpl;
 import com.example.jwt.domain.user.User;
 import com.example.jwt.domain.user.UserService;
 import org.slf4j.Logger;
+import org.springframework.stereotype.Service;
 
+@Service
 public class CalendarServiceImpl extends ExtendedServiceImpl<Calendar> implements CalendarService {
 
     protected CalendarServiceImpl(ExtendedRepository<Calendar> repository, Logger logger) {
         super(repository, logger);
     }
 
+    @Override
+    public Calendar calendarCreate(Calendar calendar) {
+        Calendar newCalendar = new Calendar();
+        newCalendar.setTitle(calendar.getTitle());
+        newCalendar.setStartDate(calendar.getStartDate());
+        newCalendar.setEndDate(calendar.getEndDate());
+        return save(newCalendar);
+    }
 }
