@@ -1,7 +1,9 @@
 package com.example.jwt.domain.user.dto;
 
 import com.example.jwt.core.generic.ExtendedDTO;
+import com.example.jwt.domain.Rank.DTO.RankDTO;
 import com.example.jwt.domain.calendar.dto.CalendarDTO;
+import com.example.jwt.domain.district.DTO.DistrictDTO;
 import com.example.jwt.domain.role.dto.RoleDTO;
 import java.util.Set;
 import java.util.UUID;
@@ -16,6 +18,11 @@ public class UserDTO extends ExtendedDTO {
 
   @Email
   private String email;
+  private int employment;
+  private  boolean kids;
+    private boolean student;
+  private Set<DistrictDTO> districts;
+  private Set<RankDTO> ranks;
 
   @Valid
   private Set<RoleDTO> roles;
@@ -24,11 +31,16 @@ public class UserDTO extends ExtendedDTO {
   public UserDTO() {
   }
 
-  public UserDTO(UUID id, String firstName, String lastName, String email, Set<RoleDTO> roles, Set<CalendarDTO> calendars) {
+  public UserDTO(UUID id, String firstName, String lastName, String email, int employment, boolean kids, boolean student, Set<DistrictDTO> districts, Set<RankDTO> ranks, Set<RoleDTO> roles, Set<CalendarDTO> calendars) {
     super(id);
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
+    this.employment = employment;
+    this.kids = kids;
+    this.student = student;
+    this.districts = districts;
+    this.ranks = ranks;
     this.roles = roles;
     this.calendars = calendars;
   }
@@ -57,6 +69,51 @@ public class UserDTO extends ExtendedDTO {
 
   public UserDTO setEmail(String email) {
     this.email = email;
+    return this;
+  }
+
+  public int getEmployment() {
+    return employment;
+  }
+
+  public UserDTO setEmployment(int employment) {
+    this.employment = employment;
+    return this;
+  }
+
+  public boolean isKids() {
+    return kids;
+  }
+
+  public UserDTO setKids(boolean kids) {
+    this.kids = kids;
+    return this;
+  }
+
+  public boolean isStudent() {
+    return student;
+  }
+
+  public UserDTO setStudent(boolean student) {
+    this.student = student;
+    return this;
+  }
+
+  public Set<DistrictDTO> getDistricts() {
+    return districts;
+  }
+
+  public UserDTO setDistricts(Set<DistrictDTO> districts) {
+    this.districts = districts;
+    return this;
+  }
+
+  public Set<RankDTO> getRanks() {
+    return ranks;
+  }
+
+  public UserDTO setRanks(Set<RankDTO> ranks) {
+    this.ranks = ranks;
     return this;
   }
 

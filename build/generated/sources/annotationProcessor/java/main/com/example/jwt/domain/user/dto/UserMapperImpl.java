@@ -1,12 +1,18 @@
 package com.example.jwt.domain.user.dto;
 
+import com.example.jwt.domain.Rank.DTO.RankDTO;
+import com.example.jwt.domain.Rank.Rank;
 import com.example.jwt.domain.authority.Authority;
 import com.example.jwt.domain.authority.dto.AuthorityDTO;
 import com.example.jwt.domain.calendar.Calendar;
 import com.example.jwt.domain.calendar.dto.CalendarDTO;
+import com.example.jwt.domain.district.DTO.DistrictDTO;
+import com.example.jwt.domain.district.District;
 import com.example.jwt.domain.role.Role;
 import com.example.jwt.domain.role.dto.RoleDTO;
 import com.example.jwt.domain.user.User;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -16,7 +22,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-12-12T16:25:49+0100",
+    date = "2024-01-04T08:59:50+0100",
     comments = "version: 1.5.5.Final, compiler: IncrementalProcessingEnvironment from gradle-language-java-7.5.jar, environment: Java 17.0.9 (Eclipse Adoptium)"
 )
 @Component
@@ -34,8 +40,11 @@ public class UserMapperImpl implements UserMapper {
         user.setFirstName( dto.getFirstName() );
         user.setLastName( dto.getLastName() );
         user.setEmail( dto.getEmail() );
-        user.setRoles( roleDTOSetToRoleSet( dto.getRoles() ) );
+        user.setEmployment( dto.getEmployment() );
+        user.setKids( dto.isKids() );
+        user.setStudent( dto.isStudent() );
         user.setCalendars( calendarDTOSetToCalendarSet( dto.getCalendars() ) );
+        user.setRoles( roleDTOSetToRoleSet( dto.getRoles() ) );
 
         return user;
     }
@@ -80,6 +89,13 @@ public class UserMapperImpl implements UserMapper {
         userDTO.setFirstName( BO.getFirstName() );
         userDTO.setLastName( BO.getLastName() );
         userDTO.setEmail( BO.getEmail() );
+        userDTO.setEmployment( BO.getEmployment() );
+        if ( BO.getKids() != null ) {
+            userDTO.setKids( BO.getKids() );
+        }
+        if ( BO.getStudent() != null ) {
+            userDTO.setStudent( BO.getStudent() );
+        }
         userDTO.setRoles( roleSetToRoleDTOSet( BO.getRoles() ) );
         userDTO.setCalendars( calendarSetToCalendarDTOSet( BO.getCalendars() ) );
 
@@ -127,8 +143,45 @@ public class UserMapperImpl implements UserMapper {
         user.setLastName( dto.getLastName() );
         user.setEmail( dto.getEmail() );
         user.setPassword( dto.getPassword() );
+        if ( dto.getBirthdate() != null ) {
+            user.setBirthdate( LocalDateTime.ofInstant( dto.getBirthdate().toInstant(), ZoneOffset.UTC ).toLocalDate() );
+        }
+        user.setEmployment( dto.getEmployment() );
+        user.setKids( dto.getKids() );
+        user.setStudent( dto.getStudent() );
+        user.setStreet( dto.getStreet() );
+        user.setDistrict( districtDTOToDistrict( dto.getDistrict() ) );
+        user.setRank( rankDTOToRank( dto.getRank() ) );
 
         return user;
+    }
+
+    protected Calendar calendarDTOToCalendar(CalendarDTO calendarDTO) {
+        if ( calendarDTO == null ) {
+            return null;
+        }
+
+        Calendar calendar = new Calendar();
+
+        calendar.setId( calendarDTO.getId() );
+        calendar.setTitle( calendarDTO.getTitle() );
+        calendar.setStartDate( calendarDTO.getStartDate() );
+        calendar.setEndDate( calendarDTO.getEndDate() );
+
+        return calendar;
+    }
+
+    protected Set<Calendar> calendarDTOSetToCalendarSet(Set<CalendarDTO> set) {
+        if ( set == null ) {
+            return null;
+        }
+
+        Set<Calendar> set1 = new LinkedHashSet<Calendar>( Math.max( (int) ( set.size() / .75f ) + 1, 16 ) );
+        for ( CalendarDTO calendarDTO : set ) {
+            set1.add( calendarDTOToCalendar( calendarDTO ) );
+        }
+
+        return set1;
     }
 
     protected Authority authorityDTOToAuthority(AuthorityDTO authorityDTO) {
@@ -179,34 +232,6 @@ public class UserMapperImpl implements UserMapper {
         Set<Role> set1 = new LinkedHashSet<Role>( Math.max( (int) ( set.size() / .75f ) + 1, 16 ) );
         for ( RoleDTO roleDTO : set ) {
             set1.add( roleDTOToRole( roleDTO ) );
-        }
-
-        return set1;
-    }
-
-    protected Calendar calendarDTOToCalendar(CalendarDTO calendarDTO) {
-        if ( calendarDTO == null ) {
-            return null;
-        }
-
-        Calendar calendar = new Calendar();
-
-        calendar.setId( calendarDTO.getId() );
-        calendar.setTitle( calendarDTO.getTitle() );
-        calendar.setStartDate( calendarDTO.getStartDate() );
-        calendar.setEndDate( calendarDTO.getEndDate() );
-
-        return calendar;
-    }
-
-    protected Set<Calendar> calendarDTOSetToCalendarSet(Set<CalendarDTO> set) {
-        if ( set == null ) {
-            return null;
-        }
-
-        Set<Calendar> set1 = new LinkedHashSet<Calendar>( Math.max( (int) ( set.size() / .75f ) + 1, 16 ) );
-        for ( CalendarDTO calendarDTO : set ) {
-            set1.add( calendarDTOToCalendar( calendarDTO ) );
         }
 
         return set1;
@@ -291,5 +316,32 @@ public class UserMapperImpl implements UserMapper {
         }
 
         return set1;
+    }
+
+    protected District districtDTOToDistrict(DistrictDTO districtDTO) {
+        if ( districtDTO == null ) {
+            return null;
+        }
+
+        District district = new District();
+
+        district.setId( districtDTO.getId() );
+        district.setName( districtDTO.getName() );
+        district.setPlz( districtDTO.getPlz() );
+
+        return district;
+    }
+
+    protected Rank rankDTOToRank(RankDTO rankDTO) {
+        if ( rankDTO == null ) {
+            return null;
+        }
+
+        Rank rank = new Rank();
+
+        rank.setId( rankDTO.getId() );
+        rank.setName( rankDTO.getName() );
+
+        return rank;
     }
 }
