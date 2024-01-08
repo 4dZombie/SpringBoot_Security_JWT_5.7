@@ -16,5 +16,9 @@ public class PriorityServiceImpl extends ExtendedServiceImpl<Priority> implement
     public Priority loadPriorityByPoints(int points) {
         return (Priority) ((PriorityRepository)repository).findByPoints(points).orElseThrow();
     }
+    @Override
+    public Priority addPriority(Priority priority) {
+        return repository.save(priority);
+    }
 
 }

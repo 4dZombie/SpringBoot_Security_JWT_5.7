@@ -24,3 +24,6 @@ INSERT INTO users (id, first_name, last_name, birthdate, email, password, street
 VALUES
     ('17b49eee-4726-428b-8b27-722d30906f9c', 'Test', 'Surename', '2000-12-20', 'test@test.ch', '$2a$10$4wHeTxsmRR0drcWULXHgs.kxm9c/ON2wmmYTeOLTnYe5uP.kdndi.', 'Strasse 1', 'true', 'false', '100', 'a9a29b19-92ff-4d1d-83a0-c211f97e4e41', '45b41bb1-762a-4b70-a4fa-985f97814507', '2000-12-20', '17b49eee-4726-428b-8b27-722d30906f9c', '2000-12-20', '17b49eee-4726-428b-8b27-722d30906f9c');
 -- INSERT INTO calendar () VALUES ('ab36f892-814e-417f-bdeb-86a9d74faad5', '');
+INSERT INTO users_role (users_id, role_id) VALUES ('17b49eee-4726-428b-8b27-722d30906f9c', '724b5da7-7e6b-4a68-90d0-41d7136ed34e');
+
+INSERT INTO priority (id,user_id, points) VALUES ('be19b1ec-e03b-4f47-836c-bf2fdc1bdc93','17b49eee-4726-428b-8b27-722d30906f9c', 20);

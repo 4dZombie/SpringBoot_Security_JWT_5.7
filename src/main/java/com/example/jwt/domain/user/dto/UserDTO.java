@@ -4,6 +4,7 @@ import com.example.jwt.core.generic.ExtendedDTO;
 import com.example.jwt.domain.Rank.DTO.RankDTO;
 import com.example.jwt.domain.calendar.dto.CalendarDTO;
 import com.example.jwt.domain.district.DTO.DistrictDTO;
+import com.example.jwt.domain.priority.DTO.PriorityDTO;
 import com.example.jwt.domain.role.dto.RoleDTO;
 import java.util.Set;
 import java.util.UUID;
@@ -20,9 +21,15 @@ public class UserDTO extends ExtendedDTO {
   private String email;
   private int employment;
   private  boolean kids;
-    private boolean student;
-  private Set<DistrictDTO> districts;
-  private Set<RankDTO> ranks;
+  private boolean student;
+
+//  private Set<PriorityDTO> priority;
+//  private Set<DistrictDTO> district;
+//  private Set<RankDTO> rank;
+
+  private PriorityDTO priority;
+  private DistrictDTO district;
+  private RankDTO rank;
 
   @Valid
   private Set<RoleDTO> roles;
@@ -31,7 +38,7 @@ public class UserDTO extends ExtendedDTO {
   public UserDTO() {
   }
 
-  public UserDTO(UUID id, String firstName, String lastName, String email, int employment, boolean kids, boolean student, Set<DistrictDTO> districts, Set<RankDTO> ranks, Set<RoleDTO> roles, Set<CalendarDTO> calendars) {
+  public UserDTO(UUID id, String firstName, String lastName, String email, int employment, boolean kids, boolean student, PriorityDTO priority, DistrictDTO district, RankDTO rank, Set<RoleDTO> roles, Set<CalendarDTO> calendars) {
     super(id);
     this.firstName = firstName;
     this.lastName = lastName;
@@ -39,8 +46,9 @@ public class UserDTO extends ExtendedDTO {
     this.employment = employment;
     this.kids = kids;
     this.student = student;
-    this.districts = districts;
-    this.ranks = ranks;
+    this.priority = priority;
+    this.district = district;
+    this.rank = rank;
     this.roles = roles;
     this.calendars = calendars;
   }
@@ -99,21 +107,30 @@ public class UserDTO extends ExtendedDTO {
     return this;
   }
 
-  public Set<DistrictDTO> getDistricts() {
-    return districts;
+  public PriorityDTO getPriority() {
+    return priority;
   }
 
-  public UserDTO setDistricts(Set<DistrictDTO> districts) {
-    this.districts = districts;
+  public UserDTO setPriority(PriorityDTO priority) {
+    this.priority = priority;
     return this;
   }
 
-  public Set<RankDTO> getRanks() {
-    return ranks;
+  public DistrictDTO getDistrict() {
+    return district;
   }
 
-  public UserDTO setRanks(Set<RankDTO> ranks) {
-    this.ranks = ranks;
+  public UserDTO setDistrict(DistrictDTO district) {
+    this.district = district;
+    return this;
+  }
+
+  public RankDTO getRank() {
+    return rank;
+  }
+
+  public UserDTO setRank(RankDTO rank) {
+    this.rank = rank;
     return this;
   }
 

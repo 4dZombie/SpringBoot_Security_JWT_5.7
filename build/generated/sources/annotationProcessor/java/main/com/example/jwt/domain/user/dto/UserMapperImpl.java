@@ -8,6 +8,8 @@ import com.example.jwt.domain.calendar.Calendar;
 import com.example.jwt.domain.calendar.dto.CalendarDTO;
 import com.example.jwt.domain.district.DTO.DistrictDTO;
 import com.example.jwt.domain.district.District;
+import com.example.jwt.domain.priority.DTO.PriorityDTO;
+import com.example.jwt.domain.priority.Priority;
 import com.example.jwt.domain.role.Role;
 import com.example.jwt.domain.role.dto.RoleDTO;
 import com.example.jwt.domain.user.User;
@@ -22,7 +24,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-01-04T08:59:50+0100",
+    date = "2024-01-08T13:20:16+0100",
     comments = "version: 1.5.5.Final, compiler: IncrementalProcessingEnvironment from gradle-language-java-7.5.jar, environment: Java 17.0.9 (Eclipse Adoptium)"
 )
 @Component
@@ -44,6 +46,9 @@ public class UserMapperImpl implements UserMapper {
         user.setKids( dto.isKids() );
         user.setStudent( dto.isStudent() );
         user.setCalendars( calendarDTOSetToCalendarSet( dto.getCalendars() ) );
+        user.setDistrict( districtDTOToDistrict( dto.getDistrict() ) );
+        user.setRank( rankDTOToRank( dto.getRank() ) );
+        user.setPriority( priorityDTOToPriority( dto.getPriority() ) );
         user.setRoles( roleDTOSetToRoleSet( dto.getRoles() ) );
 
         return user;
@@ -96,6 +101,9 @@ public class UserMapperImpl implements UserMapper {
         if ( BO.getStudent() != null ) {
             userDTO.setStudent( BO.getStudent() );
         }
+        userDTO.setPriority( priorityToPriorityDTO( BO.getPriority() ) );
+        userDTO.setDistrict( districtToDistrictDTO( BO.getDistrict() ) );
+        userDTO.setRank( rankToRankDTO( BO.getRank() ) );
         userDTO.setRoles( roleSetToRoleDTOSet( BO.getRoles() ) );
         userDTO.setCalendars( calendarSetToCalendarDTOSet( BO.getCalendars() ) );
 
@@ -184,6 +192,46 @@ public class UserMapperImpl implements UserMapper {
         return set1;
     }
 
+    protected District districtDTOToDistrict(DistrictDTO districtDTO) {
+        if ( districtDTO == null ) {
+            return null;
+        }
+
+        District district = new District();
+
+        district.setId( districtDTO.getId() );
+        district.setName( districtDTO.getName() );
+        district.setPlz( districtDTO.getPlz() );
+
+        return district;
+    }
+
+    protected Rank rankDTOToRank(RankDTO rankDTO) {
+        if ( rankDTO == null ) {
+            return null;
+        }
+
+        Rank rank = new Rank();
+
+        rank.setId( rankDTO.getId() );
+        rank.setName( rankDTO.getName() );
+
+        return rank;
+    }
+
+    protected Priority priorityDTOToPriority(PriorityDTO priorityDTO) {
+        if ( priorityDTO == null ) {
+            return null;
+        }
+
+        Priority priority = new Priority();
+
+        priority.setId( priorityDTO.getId() );
+        priority.setPoints( priorityDTO.getPoints() );
+
+        return priority;
+    }
+
     protected Authority authorityDTOToAuthority(AuthorityDTO authorityDTO) {
         if ( authorityDTO == null ) {
             return null;
@@ -235,6 +283,46 @@ public class UserMapperImpl implements UserMapper {
         }
 
         return set1;
+    }
+
+    protected PriorityDTO priorityToPriorityDTO(Priority priority) {
+        if ( priority == null ) {
+            return null;
+        }
+
+        PriorityDTO priorityDTO = new PriorityDTO();
+
+        priorityDTO.setId( priority.getId() );
+        priorityDTO.setPoints( priority.getPoints() );
+
+        return priorityDTO;
+    }
+
+    protected DistrictDTO districtToDistrictDTO(District district) {
+        if ( district == null ) {
+            return null;
+        }
+
+        DistrictDTO districtDTO = new DistrictDTO();
+
+        districtDTO.setId( district.getId() );
+        districtDTO.setName( district.getName() );
+        districtDTO.setPlz( district.getPlz() );
+
+        return districtDTO;
+    }
+
+    protected RankDTO rankToRankDTO(Rank rank) {
+        if ( rank == null ) {
+            return null;
+        }
+
+        RankDTO rankDTO = new RankDTO();
+
+        rankDTO.setId( rank.getId() );
+        rankDTO.setName( rank.getName() );
+
+        return rankDTO;
     }
 
     protected AuthorityDTO authorityToAuthorityDTO(Authority authority) {
@@ -316,32 +404,5 @@ public class UserMapperImpl implements UserMapper {
         }
 
         return set1;
-    }
-
-    protected District districtDTOToDistrict(DistrictDTO districtDTO) {
-        if ( districtDTO == null ) {
-            return null;
-        }
-
-        District district = new District();
-
-        district.setId( districtDTO.getId() );
-        district.setName( districtDTO.getName() );
-        district.setPlz( districtDTO.getPlz() );
-
-        return district;
-    }
-
-    protected Rank rankDTOToRank(RankDTO rankDTO) {
-        if ( rankDTO == null ) {
-            return null;
-        }
-
-        Rank rank = new Rank();
-
-        rank.setId( rankDTO.getId() );
-        rank.setName( rankDTO.getName() );
-
-        return rank;
     }
 }

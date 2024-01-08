@@ -39,19 +39,18 @@ public class User extends ExtendedAuditEntity {
 
   @Column(name = "street")
   private String street;
-  @OneToMany
+  @OneToMany(cascade = CascadeType.ALL)
   @JoinColumn(name = "calendar_id")
     private Set<Calendar> calendars = new HashSet<>();
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "district_id",nullable = false)
   private District district;
   @ManyToOne(cascade = CascadeType.PERSIST)
   @JoinColumn(name = "rank_id",nullable = false)
   private Rank rank;
-@OneToOne(mappedBy = "user")
-    private Priority priority;
-
+  @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  private Priority priority;
   @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(
       name = "users_role",

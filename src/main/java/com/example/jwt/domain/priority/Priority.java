@@ -12,7 +12,7 @@ public class Priority extends ExtendedEntity {
     @Column(name = "points")
     private int points;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 

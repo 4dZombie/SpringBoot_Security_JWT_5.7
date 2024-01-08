@@ -15,6 +15,13 @@ public record UserDetailsImpl(User user) implements UserDetails {
         .map(a -> new SimpleGrantedAuthority(a.getName()))
         .collect(Collectors.toList());
   }
+  public UserDetailsImpl(User user) {
+    this.user = user;
+  }
+
+  public User getUser() {
+    return user;
+  }
 
   @Override
   public String getPassword() {
