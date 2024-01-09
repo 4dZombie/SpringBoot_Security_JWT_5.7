@@ -19,20 +19,16 @@ public class Calendar extends ExtendedEntity {
     private LocalDate startDate;
     @Column(name = "endDate")
     private LocalDate endDate;
-    @ManyToOne()
-    @JoinColumn(name = "user_id")
-    private User user;
 
-    public Calendar(UUID id, String title, LocalDate startDate, LocalDate endDate, User user) {
+
+    public Calendar(UUID id, String title, LocalDate startDate, LocalDate endDate) {
         super(id);
         this.title = title;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.user = user;
     }
 
     public Calendar() {
-
     }
 
     public String getTitle() {
@@ -59,15 +55,6 @@ public class Calendar extends ExtendedEntity {
 
     public Calendar setEndDate(LocalDate endDate) {
         this.endDate = endDate;
-        return this;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public Calendar setUser(User user) {
-        this.user = user;
         return this;
     }
 }

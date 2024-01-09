@@ -16,57 +16,54 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class UserServiceImpl extends ExtendedServiceImpl<User> implements UserService {
 
-  private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-  private final static String initialRole = "CLIENT";
+    private final static String initialRole = "CLIENT";
 //  private final static String initalRank = "DEV";
 
-  private final RoleService roleService;
-  private final RankService rankService;
-  private final PriorityService priorityService;
-  private final UserRepository userRepository;
-  private final DistrictService districtService;
+    private final RoleService roleService;
+    private final RankService rankService;
+    private final PriorityService priorityService;
+    private final UserRepository userRepository;
+    private final DistrictService districtService;
 
 
-  @Autowired
-  public UserServiceImpl(UserRepository repository, Logger logger,
-                         BCryptPasswordEncoder bCryptPasswordEncoder, RoleService roleService, RankService rankService, PriorityService priorityService, UserRepository userRepository, DistrictService districtService) {
-    super(repository, logger);
-    this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-      this.roleService = roleService;
-      this.rankService = rankService;
-      this.priorityService = priorityService;
-      this.userRepository = userRepository;
-      this.districtService = districtService;
-  }
-
-  @Override
-  public User getUserById(UUID userId) {
-    Optional<User> optionalUser = userRepository.findById(userId);
-    if (optionalUser.isPresent()) {
-      User user = optionalUser.get();
-      user.getDistrict();
-      user.getRank();
-      user.getPriority();
-      user.getCalendars().size();
-      return user;
+    @Autowired
+    public UserServiceImpl(UserRepository repository, Logger logger,
+                           BCryptPasswordEncoder bCryptPasswordEncoder, RoleService roleService, RankService rankService, PriorityService priorityService, UserRepository userRepository, DistrictService districtService) {
+        super(repository, logger);
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.roleService = roleService;
+        this.rankService = rankService;
+        this.priorityService = priorityService;
+        this.userRepository = userRepository;
+        this.districtService = districtService;
     }
-    return null;
-  }
 
-  @Override
-  public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-    return ((UserRepository) repository).findByEmail(email).map(UserDetailsImpl::new)
-        .orElseThrow(() -> new UsernameNotFoundException(email));
-  }
+    @Override
+    public User getUserById(UUID userId) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            user.getDistrict();
+            user.getRank();
+            user.getPriority();
+            user.getCalendars();
+            return user;
+        }
+        return null;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        return ((UserRepository) repository).findByEmail(email).map(UserDetailsImpl::new)
+                .orElseThrow(() -> new UsernameNotFoundException(email));
+    }
   /*
   @Override
   public User leadUserByEmail(String email) throws UsernameNotFoundException {
@@ -74,48 +71,51 @@ public class UserServiceImpl extends ExtendedServiceImpl<User> implements UserSe
   }
   */
 
-  private Priority createPriorityBasedOnRank(User user) {
-    Priority priority = new Priority();
-    priority.setUser(user);
+    private Priority createPriorityBasedOnRank(User user) {
+        Priority priority = new Priority();
+        priority.setUser(user);
 
-    switch (user.getRank().getName()) {
-      case "DEV", "SUPPORT", "ADMINISTRATOR":
-        priority.setPoints(10);
-        break;
-      case "LEADER":
-        priority.setPoints(20);
-        break;
-      default:
-        priority.setPoints(5);
-        break;
+        switch (user.getRank().getName()) {
+            case "DEV", "SUPPORT", "ADMINISTRATOR":
+                priority.setPoints(10);
+                user = save(user);
+                break;
+            case "LEADER":
+                priority.setPoints(20);
+                user = save(user);
+                break;
+            default:
+                priority.setPoints(5);
+                user = save(user);
+                break;
+        }
+        if (user.getKids()) {
+            priority.setPoints(priority.getPoints() + 10);
+            user = save(user);
+        }
+        if (user.getStudent()) {
+            priority.setPoints(priority.getPoints() + 10);
+            user = save(user);
+        }
+        return priority;
     }
-    if (user.getKids()) {
-      priority.setPoints(priority.getPoints() + 10);
+
+
+    @Override
+    public User register(User user) {
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        Role role = roleService.loadRoleByName(initialRole);
+        Set<Role> roles = new HashSet<>();
+        roles.add(role);
+        user.setRoles(roles);
+        Rank rank = rankService.loadRankByName(user.getRank().getName());
+        user.setRank(rank);
+        District district = districtService.loadDistrictByPlz(user.getDistrict().getPlz());
+        user.setDistrict(district);
+        user = save(user);
+        Priority priority = createPriorityBasedOnRank(user);
+        priorityService.save(priority);
+        user.setPriority(priority);
+        return user;
     }
-    if (user.getStudent()) {
-      priority.setPoints(priority.getPoints() + 10);
-    }
-
-    return priority;
-  }
-
-
-
-  @Override
-  public User register(User user) {
-    user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-    Role role = roleService.loadRoleByName(initialRole);
-    Set<Role> roles = new HashSet<>();
-    roles.add(role);
-    user.setRoles(roles);
-    Rank rank = rankService.loadRankByName(user.getRank().getName());
-    user.setRank(rank);
-    District district = districtService.loadDistrictByPlz(user.getDistrict().getPlz());
-    user.setDistrict(district);
-    user = save(user);
-    Priority priority = createPriorityBasedOnRank(user);
-    priorityService.save(priority);
-    user.setPriority(priority);
-    return user;
-  }
 }
