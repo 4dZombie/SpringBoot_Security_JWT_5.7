@@ -159,7 +159,9 @@ public class UserServiceImpl extends ExtendedServiceImpl<User> implements UserSe
         Priority priority = createPriorityBasedOnRank(user);
         priorityService.save(priority);
         user.setPriority(priority);
-        user.setAge(getUserAge(user));
+        if (user.getBirthdate() != null) {
+            user.setAge(getUserAge(user));
+        }
         user.setEmployment(user.getEmployment());
         user.setHoliday(getUserHoliday(user));
         user = save(user);
