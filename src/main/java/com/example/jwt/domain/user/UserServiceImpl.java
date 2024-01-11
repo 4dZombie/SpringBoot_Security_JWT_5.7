@@ -3,6 +3,7 @@ package com.example.jwt.domain.user;
 import com.example.jwt.core.generic.ExtendedServiceImpl;
 import com.example.jwt.domain.Rank.Rank;
 import com.example.jwt.domain.Rank.RankService;
+import com.example.jwt.domain.calendar.Calendar;
 import com.example.jwt.domain.district.District;
 import com.example.jwt.domain.district.DistrictService;
 import com.example.jwt.domain.priority.Priority;
@@ -100,6 +101,48 @@ public class UserServiceImpl extends ExtendedServiceImpl<User> implements UserSe
         return priority;
     }
 
+    @Override
+    public List<Calendar> getAllCalendarsByUserId(UUID userId) {
+        Optional<User> userWithCalendars = userRepository.findByIdWithCalendars(userId);
+        return userWithCalendars.map(user -> new ArrayList<>(user.getCalendars())).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
+
+    public int getUserAge(User user) {
+        java.util.Calendar calendar = java.util.Calendar.getInstance();
+        int currentYear = calendar.get(java.util.Calendar.YEAR);
+        int userYear = user.getBirthdate().getYear();
+        return currentYear - userYear;
+    }
+
+    public int getYearsOfService(User user) {
+        java.util.Calendar calendar = java.util.Calendar.getInstance();
+        int currentYear = calendar.get(java.util.Calendar.YEAR);
+        int userServiceYears = user.getYearsOfEmployment().getYear();
+        return currentYear - userServiceYears;
+    }
+
+    public double getUserHoliday(User user) {
+        double holiday = 0;
+        String rank = user.getRank().getName();
+        int yearsOfService = getYearsOfService(user);
+
+        if (rank.equals("LEADER") && yearsOfService >= 11) {
+            holiday = 35.0 / 100 * user.getEmployment();
+            return holiday;
+        } else if (rank.equals("DEV") && yearsOfService >= 11 || rank.equals("ADMINISTRATION") && yearsOfService >= 11 || rank.equals("SUPPORT") && yearsOfService >= 11) {
+            holiday = 30.0 / 100 * user.getEmployment();
+            return holiday;
+        }
+
+        if (rank.equals("LEADER")) {
+            holiday = 30.0 / 100 * user.getEmployment();
+            return holiday;
+        } else if (rank.equals("DEV") || rank.equals("ADMINISTRATION") || rank.equals("SUPPORT")) {
+            holiday = 25.0 / 100 * user.getEmployment();
+            return holiday;
+        }
+        return holiday;
+    }
 
     @Override
     public User register(User user) {
@@ -116,6 +159,9 @@ public class UserServiceImpl extends ExtendedServiceImpl<User> implements UserSe
         Priority priority = createPriorityBasedOnRank(user);
         priorityService.save(priority);
         user.setPriority(priority);
+        user.setAge(getUserAge(user));
+        user.setEmployment(user.getEmployment());
+        user.setHoliday(getUserHoliday(user));
         user = save(user);
         return user;
     }

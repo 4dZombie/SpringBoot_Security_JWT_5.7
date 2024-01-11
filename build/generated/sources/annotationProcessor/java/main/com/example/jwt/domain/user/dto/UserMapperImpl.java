@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-01-09T14:26:16+0100",
+    date = "2024-01-11T14:48:36+0100",
     comments = "version: 1.5.5.Final, compiler: IncrementalProcessingEnvironment from gradle-language-java-7.5.jar, environment: Java 17.0.9 (Eclipse Adoptium)"
 )
 @Component
@@ -42,9 +42,12 @@ public class UserMapperImpl implements UserMapper {
         user.setFirstName( dto.getFirstName() );
         user.setLastName( dto.getLastName() );
         user.setEmail( dto.getEmail() );
+        user.setYearsOfEmployment( dto.getYearsOfEmployment() );
         user.setEmployment( dto.getEmployment() );
         user.setKids( dto.isKids() );
         user.setStudent( dto.isStudent() );
+        user.setAge( dto.getAge() );
+        user.setHoliday( dto.getHoliday() );
         user.setCalendars( calendarDTOSetToCalendarSet( dto.getCalendars() ) );
         user.setDistrict( districtDTOToDistrict( dto.getDistrict() ) );
         user.setRank( rankDTOToRank( dto.getRank() ) );
@@ -95,12 +98,15 @@ public class UserMapperImpl implements UserMapper {
         userDTO.setLastName( BO.getLastName() );
         userDTO.setEmail( BO.getEmail() );
         userDTO.setEmployment( BO.getEmployment() );
+        userDTO.setAge( BO.getAge() );
         if ( BO.getKids() != null ) {
             userDTO.setKids( BO.getKids() );
         }
         if ( BO.getStudent() != null ) {
             userDTO.setStudent( BO.getStudent() );
         }
+        userDTO.setHoliday( BO.getHoliday() );
+        userDTO.setYearsOfEmployment( BO.getYearsOfEmployment() );
         userDTO.setPriority( priorityToPriorityDTO( BO.getPriority() ) );
         userDTO.setDistrict( districtToDistrictDTO( BO.getDistrict() ) );
         userDTO.setRank( rankToRankDTO( BO.getRank() ) );
@@ -153,6 +159,9 @@ public class UserMapperImpl implements UserMapper {
         user.setPassword( dto.getPassword() );
         if ( dto.getBirthdate() != null ) {
             user.setBirthdate( LocalDateTime.ofInstant( dto.getBirthdate().toInstant(), ZoneOffset.UTC ).toLocalDate() );
+        }
+        if ( dto.getYearsOfEmployment() != null ) {
+            user.setYearsOfEmployment( LocalDateTime.ofInstant( dto.getYearsOfEmployment().toInstant(), ZoneOffset.UTC ).toLocalDate() );
         }
         user.setEmployment( dto.getEmployment() );
         user.setKids( dto.getKids() );

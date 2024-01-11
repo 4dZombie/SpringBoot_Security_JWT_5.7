@@ -7,6 +7,7 @@ import com.example.jwt.domain.district.DTO.DistrictDTO;
 import com.example.jwt.domain.priority.DTO.PriorityDTO;
 import com.example.jwt.domain.role.dto.RoleDTO;
 
+import java.time.LocalDate;
 import java.util.Set;
 import java.util.UUID;
 import javax.validation.Valid;
@@ -19,8 +20,11 @@ public class UserDTO extends ExtendedDTO {
     @Email
     private String email;
     private int employment;
+    private int age;
     private boolean kids;
     private boolean student;
+    private double holiday;
+    private LocalDate yearsOfEmployment;
     private PriorityDTO priority;
     private DistrictDTO district;
     private RankDTO rank;
@@ -31,14 +35,17 @@ public class UserDTO extends ExtendedDTO {
     public UserDTO() {
     }
 
-    public UserDTO(UUID id, String firstName, String lastName, String email, int employment, boolean kids, boolean student, PriorityDTO priority, DistrictDTO district, RankDTO rank, Set<RoleDTO> roles, Set<CalendarDTO> calendars) {
+    public UserDTO(UUID id, String firstName, String lastName, String email, int employment, int age, boolean kids, boolean student, double holiday, LocalDate yearsOfEmployment, PriorityDTO priority, DistrictDTO district, RankDTO rank, Set<RoleDTO> roles, Set<CalendarDTO> calendars) {
         super(id);
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.employment = employment;
+        this.age = age;
         this.kids = kids;
         this.student = student;
+        this.holiday = holiday;
+        this.yearsOfEmployment = yearsOfEmployment;
         this.priority = priority;
         this.district = district;
         this.rank = rank;
@@ -82,6 +89,15 @@ public class UserDTO extends ExtendedDTO {
         return this;
     }
 
+    public int getAge() {
+        return age;
+    }
+
+    public UserDTO setAge(int age) {
+        this.age = age;
+        return this;
+    }
+
     public boolean isKids() {
         return kids;
     }
@@ -97,6 +113,24 @@ public class UserDTO extends ExtendedDTO {
 
     public UserDTO setStudent(boolean student) {
         this.student = student;
+        return this;
+    }
+
+    public double getHoliday() {
+        return holiday;
+    }
+
+    public UserDTO setHoliday(double holiday) {
+        this.holiday = holiday;
+        return this;
+    }
+
+    public LocalDate getYearsOfEmployment() {
+        return yearsOfEmployment;
+    }
+
+    public UserDTO setYearsOfEmployment(LocalDate yearsOfEmployment) {
+        this.yearsOfEmployment = yearsOfEmployment;
         return this;
     }
 

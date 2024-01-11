@@ -30,6 +30,8 @@ public class User extends ExtendedAuditEntity {
     private String password;
     @Column(name = "birthdate")
     private LocalDate birthdate;
+    @Column(name = "years_of_employment")
+    private LocalDate yearsOfEmployment;
     @Column(name = "employment")
     private int employment;
     @Column(name = "kids")
@@ -39,6 +41,12 @@ public class User extends ExtendedAuditEntity {
 
     @Column(name = "street")
     private String street;
+
+    @Column(name = "age")
+    private int age;
+
+    @Column(name = "holiday")
+    private double holiday;
   /*
   @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
   @JoinColumn(name = "calendar_id")
@@ -71,17 +79,20 @@ public class User extends ExtendedAuditEntity {
     public User() {
     }
 
-    public User(UUID id, String firstName, String lastName, String email, String password, LocalDate birthdate, int employment, Boolean kids, Boolean student, String street, Set<Calendar> calendars, District district, Rank rank, Priority priority, Set<Role> roles) {
+    public User(UUID id, String firstName, String lastName, String email, String password, LocalDate birthdate, LocalDate yearsOfEmployment, int employment, Boolean kids, Boolean student, String street, int age, double holiday, Set<Calendar> calendars, District district, Rank rank, Priority priority, Set<Role> roles) {
         super(id);
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
         this.birthdate = birthdate;
+        this.yearsOfEmployment = yearsOfEmployment;
         this.employment = employment;
         this.kids = kids;
         this.student = student;
         this.street = street;
+        this.age = age;
+        this.holiday = holiday;
         this.calendars = calendars;
         this.district = district;
         this.rank = rank;
@@ -134,6 +145,15 @@ public class User extends ExtendedAuditEntity {
         return this;
     }
 
+    public LocalDate getYearsOfEmployment() {
+        return yearsOfEmployment;
+    }
+
+    public User setYearsOfEmployment(LocalDate yearsOfEmployment) {
+        this.yearsOfEmployment = yearsOfEmployment;
+        return this;
+    }
+
     public int getEmployment() {
         return employment;
     }
@@ -167,6 +187,24 @@ public class User extends ExtendedAuditEntity {
 
     public User setStreet(String street) {
         this.street = street;
+        return this;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public User setAge(int age) {
+        this.age = age;
+        return this;
+    }
+
+    public double getHoliday() {
+        return holiday;
+    }
+
+    public User setHoliday(double holiday) {
+        this.holiday = holiday;
         return this;
     }
 

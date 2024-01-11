@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Validated
@@ -73,5 +74,11 @@ public class CalendarController {
         return new ResponseEntity<>(calendarMapper.toDTO(calendar), HttpStatus.CREATED);
     }
 
+    @GetMapping("/user/{userId}/calendars")
+    public ResponseEntity<List<CalendarDTO>> retrieveCalendarsByUserId(@PathVariable UUID userId) {
+        List<Calendar> calendars = userService.getAllCalendarsByUserId(userId);
+        List<CalendarDTO> calendarDTOs = calendarMapper.toDTOs(calendars);
+        return new ResponseEntity<>(calendarDTOs, HttpStatus.OK);
+    }
 
 }

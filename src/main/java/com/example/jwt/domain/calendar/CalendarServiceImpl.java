@@ -6,6 +6,8 @@ import com.example.jwt.domain.user.User;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -35,7 +37,5 @@ public class CalendarServiceImpl extends ExtendedServiceImpl<Calendar> implement
         return calendar;
     }*/
 
-    //@Override
-    //public Optional<User> findByIdWithCalendars(UUID id) {
-    //}
+
 }

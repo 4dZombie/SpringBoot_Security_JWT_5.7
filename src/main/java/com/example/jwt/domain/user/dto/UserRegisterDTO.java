@@ -6,6 +6,7 @@ import com.example.jwt.domain.district.DTO.DistrictDTO;
 import com.example.jwt.domain.priority.DTO.PriorityDTO;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.UUID;
 import javax.validation.constraints.*;
@@ -35,7 +36,10 @@ public class UserRegisterDTO extends ExtendedDTO {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Past
     private Date birthdate;
-
+    @NotNull
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Past
+    private Date yearsOfEmployment;
     private DistrictDTO district;
     private PriorityDTO priority;
     private RankDTO rank;
@@ -51,7 +55,7 @@ public class UserRegisterDTO extends ExtendedDTO {
     public UserRegisterDTO() {
     }
 
-    public UserRegisterDTO(UUID id, String firstName, String lastName, String email, String password, String street, Date birthdate, DistrictDTO district, PriorityDTO priority, RankDTO rank, Boolean kids, Boolean student, int employment) {
+    public UserRegisterDTO(UUID id, String firstName, String lastName, String email, String password, String street, Date birthdate, Date yearsOfEmployment, DistrictDTO district, PriorityDTO priority, RankDTO rank, Boolean kids, Boolean student, int employment) {
         super(id);
         this.firstName = firstName;
         this.lastName = lastName;
@@ -59,6 +63,7 @@ public class UserRegisterDTO extends ExtendedDTO {
         this.password = password;
         this.street = street;
         this.birthdate = birthdate;
+        this.yearsOfEmployment = yearsOfEmployment;
         this.district = district;
         this.priority = priority;
         this.rank = rank;
@@ -118,6 +123,15 @@ public class UserRegisterDTO extends ExtendedDTO {
 
     public UserRegisterDTO setBirthdate(Date birthdate) {
         this.birthdate = birthdate;
+        return this;
+    }
+
+    public Date getYearsOfEmployment() {
+        return yearsOfEmployment;
+    }
+
+    public UserRegisterDTO setYearsOfEmployment(Date yearsOfEmployment) {
+        this.yearsOfEmployment = yearsOfEmployment;
         return this;
     }
 
