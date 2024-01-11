@@ -43,7 +43,6 @@ public interface CalendarMapper extends ExtendedMapper<Calendar, CalendarDTO> {
     // Your other mapping methods
 
     @Mappings({
-            // Your mappings here
     })
     List<CalendarDTO> toDTOs(List<Calendar> entities);
 }
