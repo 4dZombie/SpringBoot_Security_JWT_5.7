@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-01-11T15:16:06+0100",
+    date = "2024-01-17T16:55:59+0100",
     comments = "version: 1.5.5.Final, compiler: IncrementalProcessingEnvironment from gradle-language-java-7.5.jar, environment: Java 17.0.9 (Eclipse Adoptium)"
 )
 @Component
@@ -46,6 +46,7 @@ public class UserMapperImpl implements UserMapper {
         user.setEmployment( dto.getEmployment() );
         user.setKids( dto.isKids() );
         user.setStudent( dto.isStudent() );
+        user.setStreet( dto.getStreet() );
         user.setAge( dto.getAge() );
         user.setHoliday( dto.getHoliday() );
         user.setCalendars( calendarDTOSetToCalendarSet( dto.getCalendars() ) );
@@ -94,6 +95,7 @@ public class UserMapperImpl implements UserMapper {
         UserDTO userDTO = new UserDTO();
 
         userDTO.setId( BO.getId() );
+        userDTO.setStreet( BO.getStreet() );
         userDTO.setFirstName( BO.getFirstName() );
         userDTO.setLastName( BO.getLastName() );
         userDTO.setEmail( BO.getEmail() );
