@@ -21,6 +21,7 @@ public class UserDTO extends ExtendedDTO {
     private String email;
     private int employment;
     private int age;
+    private String street;
     private boolean kids;
     private boolean student;
     private double holiday;
@@ -35,13 +36,14 @@ public class UserDTO extends ExtendedDTO {
     public UserDTO() {
     }
 
-    public UserDTO(UUID id, String firstName, String lastName, String email, int employment, int age, boolean kids, boolean student, double holiday, LocalDate yearsOfEmployment, PriorityDTO priority, DistrictDTO district, RankDTO rank, Set<RoleDTO> roles, Set<CalendarDTO> calendars) {
+    public UserDTO(UUID id, String firstName, String lastName, String email, int employment, int age, String street, boolean kids, boolean student, double holiday, LocalDate yearsOfEmployment, PriorityDTO priority, DistrictDTO district, RankDTO rank, Set<RoleDTO> roles, Set<CalendarDTO> calendars) {
         super(id);
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.employment = employment;
         this.age = age;
+        this.street = street;
         this.kids = kids;
         this.student = student;
         this.holiday = holiday;
@@ -51,6 +53,15 @@ public class UserDTO extends ExtendedDTO {
         this.rank = rank;
         this.roles = roles;
         this.calendars = calendars;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public UserDTO setStreet(String street) {
+        this.street = street;
+        return this;
     }
 
     public String getFirstName() {

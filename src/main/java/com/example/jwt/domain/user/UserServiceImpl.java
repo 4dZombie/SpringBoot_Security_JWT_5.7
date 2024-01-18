@@ -17,6 +17,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.*;
 
 @Service
@@ -106,12 +108,23 @@ public class UserServiceImpl extends ExtendedServiceImpl<User> implements UserSe
         Optional<User> userWithCalendars = userRepository.findByIdWithCalendars(userId);
         return userWithCalendars.map(user -> new ArrayList<>(user.getCalendars())).orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
-
+    /*
     public int getUserAge(User user) {
         java.util.Calendar calendar = java.util.Calendar.getInstance();
         int currentYear = calendar.get(java.util.Calendar.YEAR);
         int userYear = user.getBirthdate().getYear();
         return currentYear - userYear;
+    }*/
+
+    public int getUserAge(User user) {
+        LocalDate birthdate = user.getBirthdate();
+        LocalDate currentDate = LocalDate.now();
+
+        if (birthdate != null) {
+            return Period.between(birthdate, currentDate).getYears();
+        } else {
+            throw new IllegalArgumentException("The birthdate is not set for this user");
+        }
     }
 
     public int getYearsOfService(User user) {

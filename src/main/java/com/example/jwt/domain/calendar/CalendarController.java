@@ -12,6 +12,7 @@ import com.example.jwt.domain.user.dto.UserRegisterDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -79,6 +80,21 @@ public class CalendarController {
         List<Calendar> calendars = userService.getAllCalendarsByUserId(userId);
         List<CalendarDTO> calendarDTOs = calendarMapper.toDTOs(calendars);
         return new ResponseEntity<>(calendarDTOs, HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('USER_MODIFY')")
+    public ResponseEntity<CalendarDTO> updateById(@PathVariable UUID id,
+                                                  @Valid @RequestBody CalendarDTO calendarDTO) {
+        Calendar calendar = calendarService.updateById(id, calendarMapper.fromCalendarDTO(calendarDTO));
+        return new ResponseEntity<>(calendarMapper.toDTO(calendar), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('USER_DELETE')")
+    public ResponseEntity<Void> deleteById(@PathVariable UUID id) {
+        calendarService.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }
