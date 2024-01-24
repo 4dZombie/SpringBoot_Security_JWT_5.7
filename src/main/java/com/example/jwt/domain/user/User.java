@@ -3,6 +3,7 @@ package com.example.jwt.domain.user;
 import com.example.jwt.core.generic.ExtendedAuditEntity;
 import com.example.jwt.domain.Rank.Rank;
 import com.example.jwt.domain.calendar.Calendar;
+import com.example.jwt.domain.deputy.Deputy;
 import com.example.jwt.domain.district.District;
 import com.example.jwt.domain.priority.Priority;
 import com.example.jwt.domain.role.Role;
@@ -66,6 +67,9 @@ public class User extends ExtendedAuditEntity {
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "rank_id", nullable = false)
     private Rank rank;
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "deputy_id", nullable = false)
+    private Deputy deputy;
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Priority priority;
     @ManyToMany(fetch = FetchType.EAGER)
