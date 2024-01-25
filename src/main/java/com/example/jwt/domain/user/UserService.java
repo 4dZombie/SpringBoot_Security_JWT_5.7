@@ -15,4 +15,6 @@ public interface UserService extends UserDetailsService, ExtendedService<User> {
 
     User getUserById(UUID id);
 
+    User setDeputy(UUID userId, UUID deputyId);
+
 }

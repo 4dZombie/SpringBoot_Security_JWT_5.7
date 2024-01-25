@@ -19,16 +19,19 @@ public class Calendar extends ExtendedEntity {
     private LocalDate startDate;
     @Column(name = "endDate")
     private LocalDate endDate;
+    @Enumerated(EnumType.STRING)
+    private CalendarStatus status;
 
-
-    public Calendar(UUID id, String title, LocalDate startDate, LocalDate endDate) {
+    public Calendar(UUID id, String title, LocalDate startDate, LocalDate endDate, CalendarStatus status) {
         super(id);
         this.title = title;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.status = status;
     }
 
     public Calendar() {
+
     }
 
     public String getTitle() {
@@ -55,6 +58,15 @@ public class Calendar extends ExtendedEntity {
 
     public Calendar setEndDate(LocalDate endDate) {
         this.endDate = endDate;
+        return this;
+    }
+
+    public CalendarStatus getStatus() {
+        return status;
+    }
+
+    public Calendar setStatus(CalendarStatus status) {
+        this.status = status;
         return this;
     }
 }

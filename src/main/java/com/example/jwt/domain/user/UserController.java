@@ -1,5 +1,6 @@
 package com.example.jwt.domain.user;
 
+import com.example.jwt.domain.user.dto.DeputyAssignmentDTO;
 import com.example.jwt.domain.user.dto.UserDTO;
 import com.example.jwt.domain.user.dto.UserMapper;
 import com.example.jwt.domain.user.dto.UserRegisterDTO;
@@ -68,4 +69,12 @@ public class UserController {
         userService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @PutMapping("/{userId}/deputy")
+    //@PreAuthorize("hasAuthority('DEPUTY_ASSIGN')")
+    public ResponseEntity<UserDTO> assignDeputy(@PathVariable UUID userId, @Valid @RequestBody DeputyAssignmentDTO deputyAssignmentDTO) {
+        User updatedUser = userService.setDeputy(userId, deputyAssignmentDTO.getDeputyId());
+        return new ResponseEntity<>(userMapper.toDTO(updatedUser), HttpStatus.OK);
+    }
+
 }

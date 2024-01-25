@@ -44,27 +44,7 @@ public class CalendarController {
         List<Calendar> calendars = calendarService.findAll();
         return new ResponseEntity<>(calendarMapper.toDTOs(calendars), HttpStatus.OK);
     }
-/*
-    @GetMapping("/{id}")
-    public ResponseEntity<List<CalendarDTO>> retrieveById(@PathVariable UUID id) {
-        List<Calendar> calendars = calendarService.findById(id);
-        return new ResponseEntity<>(calendarMapper.toDTO(calendars), HttpStatus.OK);
-    }
 
-    @GetMapping("/{name}")
-    public ResponseEntity<List<CalendarDTO>> retrieveByName(@PathVariable Date startDate, Date endDate) {
-        List<Calendar> calendars = calendarService.loadCalendarByDate(startDate, endDate);
-        return new ResponseEntity<>(calendarMapper.toDTO(calendars), HttpStatus.OK);
-    }
-    */
-
-    /*
-        @PostMapping(value = "/entry", consumes = "application/json")
-        public ResponseEntity<CalendarDTO> entry(@Valid @RequestBody CalendarDTO calendarDTO) {
-            Calendar calendar = calendarService.calendarCreate(calendarMapper.fromCalendarDTO(calendarDTO));
-            return new ResponseEntity<>(calendarMapper.toDTO(calendar), HttpStatus.CREATED);
-        }
-    */
     @PostMapping(value = "/entry", consumes = "application/json")
     public ResponseEntity<CalendarDTO> entry(@Valid @RequestBody CalendarDTO calendarDTO, Authentication authentication) {
         Calendar calendar = calendarService.calendarCreate(calendarMapper.fromCalendarDTO(calendarDTO));

@@ -3,15 +3,11 @@ package com.example.jwt.domain.user;
 import com.example.jwt.core.generic.ExtendedAuditEntity;
 import com.example.jwt.domain.Rank.Rank;
 import com.example.jwt.domain.calendar.Calendar;
-import com.example.jwt.domain.deputy.Deputy;
 import com.example.jwt.domain.district.District;
 import com.example.jwt.domain.priority.Priority;
 import com.example.jwt.domain.role.Role;
 
-import java.text.SimpleDateFormat;
-import java.time.DateTimeException;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -67,9 +63,10 @@ public class User extends ExtendedAuditEntity {
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "rank_id", nullable = false)
     private Rank rank;
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "deputy_id", nullable = false)
-    private Deputy deputy;
+    @ManyToOne
+    @JoinColumn(name = "deputy_id")
+    private User deputy;
+
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Priority priority;
     @ManyToMany(fetch = FetchType.EAGER)
@@ -83,7 +80,7 @@ public class User extends ExtendedAuditEntity {
     public User() {
     }
 
-    public User(UUID id, String firstName, String lastName, String email, String password, LocalDate birthdate, LocalDate yearsOfEmployment, int employment, Boolean kids, Boolean student, String street, int age, double holiday, Set<Calendar> calendars, District district, Rank rank, Priority priority, Set<Role> roles) {
+    public User(UUID id, String firstName, String lastName, String email, String password, LocalDate birthdate, LocalDate yearsOfEmployment, int employment, Boolean kids, Boolean student, String street, int age, double holiday, Set<Calendar> calendars, District district, Rank rank, User deputy, Priority priority, Set<Role> roles) {
         super(id);
         this.firstName = firstName;
         this.lastName = lastName;
@@ -100,6 +97,7 @@ public class User extends ExtendedAuditEntity {
         this.calendars = calendars;
         this.district = district;
         this.rank = rank;
+        this.deputy = deputy;
         this.priority = priority;
         this.roles = roles;
     }
@@ -236,6 +234,15 @@ public class User extends ExtendedAuditEntity {
 
     public User setRank(Rank rank) {
         this.rank = rank;
+        return this;
+    }
+
+    public User getDeputy() {
+        return deputy;
+    }
+
+    public User setDeputy(User deputy) {
+        this.deputy = deputy;
         return this;
     }
 
