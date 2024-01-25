@@ -67,12 +67,14 @@ public class UserServiceImpl extends ExtendedServiceImpl<User> implements UserSe
         return ((UserRepository) repository).findByEmail(email).map(UserDetailsImpl::new)
                 .orElseThrow(() -> new UsernameNotFoundException(email));
     }
-  /*
-  @Override
-  public User leadUserByEmail(String email) throws UsernameNotFoundException {
-    return ((UserRepository) repository).findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(email));
-  }
-  */
+
+    public User setDeputy(UUID userId, UUID deputyId) {
+        User user = getUserById(userId);
+        User deputy = getUserById(deputyId);
+        user.setDeputy(deputy);
+        return save(user);
+    }
+
 
     private Priority createPriorityBasedOnRank(User user) {
         Priority priority = new Priority();
