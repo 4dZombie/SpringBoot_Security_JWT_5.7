@@ -56,7 +56,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('USER_MODIFY') && @userPermissionEvaluator.isUserAboveAge(authentication.principal.user,18)")
+    //@PreAuthorize("hasAuthority('USER_MODIFY')")
     public ResponseEntity<UserDTO> updateById(@PathVariable UUID id,
                                               @Valid @RequestBody UserDTO userDTO) {
         User user = userService.updateById(id, userMapper.fromDTO(userDTO));
