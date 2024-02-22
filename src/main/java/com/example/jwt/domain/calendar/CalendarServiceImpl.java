@@ -1,15 +1,15 @@
 package com.example.jwt.domain.calendar;
 
-import com.example.jwt.core.generic.ExtendedRepository;
 import com.example.jwt.core.generic.ExtendedServiceImpl;
 import com.example.jwt.domain.user.User;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class CalendarServiceImpl extends ExtendedServiceImpl<Calendar> implements CalendarService {
@@ -37,6 +37,13 @@ public class CalendarServiceImpl extends ExtendedServiceImpl<Calendar> implement
     public List<Calendar> getOverlappingEntries(LocalDate startDate, LocalDate endDate, CalendarStatus status) {
         return calendarRepository.findOverlappingEntries(startDate, endDate, status);
     }
+
+    public Optional<User> getCalendarsByUserId(UUID userId) {
+        return calendarRepository.findByIdWithCalendars(userId);
+    }
+
+    
+
 /*
     public void updateCalendarEntryStatuses() {
         List<Calendar> inProgressEntries = findByStatus(CalendarStatus.IN_PROGRESS);

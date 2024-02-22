@@ -20,4 +20,6 @@ public interface CalendarRepository extends ExtendedRepository<Calendar> {
 
     @Query("SELECT c FROM Calendar c WHERE (c.startDate <= :endDate AND c.endDate >= :startDate) AND c.status = :status")
     List<Calendar> findOverlappingEntries(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate, @Param("status") CalendarStatus status);
+
+
 }
