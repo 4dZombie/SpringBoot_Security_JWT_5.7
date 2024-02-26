@@ -1,15 +1,14 @@
 package com.example.jwt.domain.calendar;
 
-import com.example.jwt.core.generic.ExtendedRepository;
 import com.example.jwt.core.generic.ExtendedServiceImpl;
-import com.example.jwt.domain.user.User;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class CalendarServiceImpl extends ExtendedServiceImpl<Calendar> implements CalendarService {
@@ -33,10 +32,46 @@ public class CalendarServiceImpl extends ExtendedServiceImpl<Calendar> implement
         return calendarRepository.findByStatus(status);
     }
 
+
+    //get overlapping entries
+    //probably wrong atm
     @Override
     public List<Calendar> getOverlappingEntries(LocalDate startDate, LocalDate endDate, CalendarStatus status) {
         return calendarRepository.findOverlappingEntries(startDate, endDate, status);
     }
+
+
+    // if entrys overlap check if user1 and user2 have the same rank if yes check if user is deputy of the other user if yes pre_reject the entry else check priority and change status to pre_accept
+
+
+    //when calender entry status is Accepted deduct the days from user's holiday total
+
+
+    //if entrys dont overlap pre_accept
+
+
+    //updateEntryStatuses
+    @Override
+    public Calendar updateStatusById(UUID id, CalendarStatus status) {
+        return calendarRepository.findById(id).map(calendarToUpdate -> {
+            calendarToUpdate.setStatus(status);
+            return calendarRepository.save(calendarToUpdate);
+        }).orElseThrow(() -> new EntityNotFoundException("Calendar not found with id: " + id));
+    }
+
+
+    //if user have overlapping entrys with its deputy pre_reject the entry
+
+
+    // if user entry has more days than user has holidays left reject the entry with message "not enough holidays left"
+
+
+    //get all calendars by user_id
+
+
+    //get all calendars by status
+
+
 /*
     public void updateCalendarEntryStatuses() {
         List<Calendar> inProgressEntries = findByStatus(CalendarStatus.IN_PROGRESS);
@@ -52,23 +87,6 @@ public class CalendarServiceImpl extends ExtendedServiceImpl<Calendar> implement
     }
 */
 
-    // @Transactional
-    // public void updateCalendarEntryStatuses() {
-    //  List<Calendar> inProgressEntries = findByStatus(CalendarStatus.IN_PROGRESS);
-    // for (Calendar currentEntry : inProgressEntries) {
-    // Fetch all entries that overlap with the current entry
-    //    List<Calendar> overlappingEntries = calendarRepository.findOverlappingEntries(currentEntry.getStartDate(), currentEntry.getEndDate(), CalendarStatus.IN_PROGRESS);
-
-    // Remove the current entry from the list of overlaps if present
-    //   overlappingEntries.removeIf(entry -> entry.equals(currentEntry));
-
-    // Process based on overlaps
-    //    if (overlappingEntries.isEmpty()) {
-    //        acceptCalendarEntry(currentEntry);
-    //    } else {
-    //        processOverlappingEntries(currentEntry, overlappingEntries);
-    //    }
-    // }
 
     //public void acceptCalendarEntry(Calendar calendar) {
     //    if (calendar != null) {
@@ -76,8 +94,6 @@ public class CalendarServiceImpl extends ExtendedServiceImpl<Calendar> implement
     //        calendarRepository.save(calendar);
     //    }
     //}
-
-
 //
 //        private void declineCalendarEntry(Calendar entry) {
 //            // Implementation details...
@@ -87,11 +103,6 @@ public class CalendarServiceImpl extends ExtendedServiceImpl<Calendar> implement
 //            // Implementation details...
 //        }
 //
-//        private double calculateHolidayDays(Calendar entry) {
-//            // Implementation details...
-//            // Placeholder implementation, you need to calculate the actual days
-//        }
-
 //        private void processOverlappingEntries(Calendar currentEntry, List<Calendar> overlappingEntries) {
 //            User currentUser = currentEntry.getUser();
 //            for (Calendar overlap : overlappingEntries) {
@@ -113,18 +124,6 @@ public class CalendarServiceImpl extends ExtendedServiceImpl<Calendar> implement
 //            }
 //
 //            // Decide whether to accept or decline based on comparisons
-//        }
-//
-//        private void acceptCalendarEntry(Calendar entry) {
-//            entry.setStatus(CalendarStatus.ACCEPTED);
-//            // Deduct days from user's holiday total, ensure you handle edge cases like holidays going negative
-//            adjustUserHolidayTotal(entry.getUser(), entry);
-//            calendarRepository.save(entry);
-//        }
-//
-//        private void declineCalendarEntry(Calendar entry) {
-//            entry.setStatus(CalendarStatus.DECLINED);
-//            calendarRepository.save(entry);
 //        }
 //
 //        private void adjustUserHolidayTotal(User user, Calendar entry) {

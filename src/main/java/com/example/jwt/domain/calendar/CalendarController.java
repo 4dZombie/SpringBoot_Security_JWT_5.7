@@ -40,12 +40,14 @@ public class CalendarController {
     }
 
     @GetMapping({"", "/"})
+    @PreAuthorize("hasAuthority('CAN_PLACE_ENTRY')")
     public ResponseEntity<List<CalendarDTO>> retrieveAll() {
         List<Calendar> calendars = calendarService.findAll();
         return new ResponseEntity<>(calendarMapper.toDTOs(calendars), HttpStatus.OK);
     }
 
     @PostMapping(value = "/entry", consumes = "application/json")
+    @PreAuthorize("hasAuthority('CAN_PLACE_ENTRY')")
     public ResponseEntity<CalendarDTO> entry(@Valid @RequestBody CalendarDTO calendarDTO, Authentication authentication) {
         Calendar calendar = calendarService.calendarCreate(calendarMapper.fromCalendarDTO(calendarDTO));
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
@@ -56,6 +58,7 @@ public class CalendarController {
     }
 
     @GetMapping("/user/{userId}/calendars")
+    @PreAuthorize("hasAuthority('CAN_PLACE_ENTRY')")
     public ResponseEntity<List<CalendarDTO>> retrieveCalendarsByUserId(@PathVariable UUID userId) {
         List<Calendar> calendars = userService.getAllCalendarsByUserId(userId);
         List<CalendarDTO> calendarDTOs = calendarMapper.toDTOs(calendars);
@@ -63,7 +66,7 @@ public class CalendarController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('USER_MODIFY')")
+    @PreAuthorize("hasAuthority('CAN_PLACE_ENTRY')")
     public ResponseEntity<CalendarDTO> updateById(@PathVariable UUID id,
                                                   @Valid @RequestBody CalendarDTO calendarDTO) {
         Calendar calendar = calendarService.updateById(id, calendarMapper.fromCalendarDTO(calendarDTO));
@@ -71,10 +74,17 @@ public class CalendarController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('USER_DELETE')")
+    @PreAuthorize("hasAuthority('CAN_PLACE_ENTRY')")
     public ResponseEntity<Void> deleteById(@PathVariable UUID id) {
         calendarService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    //put mapping for changing status of calendar entry
+    @PutMapping("/{id}/status")
+    @PreAuthorize("hasAuthority('CAN_PLACE_ENTRY')")
+    public ResponseEntity<CalendarDTO> updateStatusById(@PathVariable UUID id, @Valid @RequestBody CalendarDTO calendarDTO) {
+        Calendar calendar = calendarService.updateStatusById(id, calendarDTO.getStatus());
+        return new ResponseEntity<>(calendarMapper.toDTO(calendar), HttpStatus.OK);
+    }
 }

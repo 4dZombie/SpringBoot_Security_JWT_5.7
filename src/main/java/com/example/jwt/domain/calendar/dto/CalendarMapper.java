@@ -2,6 +2,7 @@ package com.example.jwt.domain.calendar.dto;
 
 import com.example.jwt.core.generic.ExtendedMapper;
 import com.example.jwt.domain.calendar.Calendar;
+import com.example.jwt.domain.calendar.CalendarStatus;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mappings;
 import org.mapstruct.Named;

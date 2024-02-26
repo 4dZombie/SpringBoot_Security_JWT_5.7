@@ -4,6 +4,7 @@ import com.example.jwt.core.generic.ExtendedService;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 public interface CalendarService extends ExtendedService<Calendar> {
 
@@ -15,4 +16,7 @@ public interface CalendarService extends ExtendedService<Calendar> {
 
 
     List<Calendar> getOverlappingEntries(LocalDate startDate, LocalDate endDate, CalendarStatus status);
+    
+    //updateEntryStatuses
+    Calendar updateStatusById(UUID id, CalendarStatus status);
 }
