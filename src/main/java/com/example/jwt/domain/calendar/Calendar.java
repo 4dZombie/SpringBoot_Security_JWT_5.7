@@ -1,18 +1,14 @@
 package com.example.jwt.domain.calendar;
 
-import com.example.jwt.core.generic.ExtendedEntity;
-import com.example.jwt.domain.role.Role;
-import com.example.jwt.domain.user.User;
+import com.example.jwt.core.generic.ExtendedAuditEntity;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
 @Entity
 @Table(name = "calendar")
-public class Calendar extends ExtendedEntity {
+public class Calendar extends ExtendedAuditEntity {
     @Column(name = "title")
     private String title;
     @Column(name = "startDate")

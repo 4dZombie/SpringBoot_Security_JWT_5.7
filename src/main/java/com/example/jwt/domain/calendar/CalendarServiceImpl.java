@@ -24,6 +24,7 @@ public class CalendarServiceImpl extends ExtendedServiceImpl<Calendar> implement
 
     @Override
     public Calendar calendarCreate(Calendar calendar) {
+        calendar.setCreatedAt(LocalDate.now().atStartOfDay());
         calendar.setStatus(CalendarStatus.IN_PROGRESS);
         return calendarRepository.save(calendar);
     }
@@ -42,7 +43,49 @@ public class CalendarServiceImpl extends ExtendedServiceImpl<Calendar> implement
         return calendarRepository.findByIdWithCalendars(userId);
     }
 
-    
+
+//ifthereisnooverlappingentries,acceptthecalendarentry
+
+
+//ifthereisoverlappingentries,checkiftheuserhasadeputy
+
+
+//ifuserhasaoverlappingentrywithadeputy,rejectthecalendarentry
+
+
+//ifuserhasoverlappingentrywithanotheruser,comparetheirrankiftheyhavethesamerank,comparetheirpriorityiftheyhavethesamepriority,rejectthecalendarentry
+
+
+//iftheyarethesamerankbutdifferentdeputy,acceptthecalendarentrywithhigherpriority
+
+
+//ifauserhasselectedadeputyandtheyhaveaoverlappingentry,rejectthecalendarentry
+
+
+//ifauserhasselectedadeputyandtheydonthaveoverlappingentry,acceptthecalendarentry
+
+
+//ifauserhasnotselectedadeputyandtheyhaveaoverlappingentry,rejectthecalendarentry
+
+
+//ifauserhasnotselectedadeputyandtheydonthaveaoverlappingentry,acceptthecalendarentry
+
+
+//afteracalendarentryisaccepted,deductthedaysfromtheuser'sholidaytotal
+
+
+//iftheuser'sholidaytotalisequalorlessthan0,rejectthecalendarentry
+
+
+//afteranewyear,resettheuser'sholidaytotal/recalculatetheuser'sholidaytotal
+
+
+//getallcalendarentrysfromuserswiththesamerank
+
+
+//getallcalendarentryswithaspecificstatus
+
+
 
 /*
     public void updateCalendarEntryStatuses() {
