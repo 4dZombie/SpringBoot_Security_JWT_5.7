@@ -18,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -87,4 +88,13 @@ public class CalendarController {
         Calendar calendar = calendarService.updateStatusById(id, calendarDTO.getStatus());
         return new ResponseEntity<>(calendarMapper.toDTO(calendar), HttpStatus.OK);
     }
+
+    //get mapping for getting overlapping entries
+    @GetMapping("/overlapping")
+    //@PreAuthorize("hasAuthority('CAN_PLACE_ENTRY')")
+    public ResponseEntity<List<CalendarDTO>> getOverlappingEntries(@RequestParam LocalDate startDate, @RequestParam LocalDate endDate, @RequestParam CalendarStatus status) {
+        List<Calendar> calendars = calendarService.getOverlappingEntries(startDate, endDate, status);
+        return new ResponseEntity<>(calendarMapper.toDTOs(calendars), HttpStatus.OK);
+    }
+
 }

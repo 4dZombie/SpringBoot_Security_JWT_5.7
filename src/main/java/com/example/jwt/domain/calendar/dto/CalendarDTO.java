@@ -11,16 +11,18 @@ public class CalendarDTO extends ExtendedDTO {
     private LocalDate startDate;
     private LocalDate endDate;
     private CalendarStatus status;
+    private LocalDate createdAt;
 
     public CalendarDTO() {
     }
 
-    public CalendarDTO(UUID id, String title, LocalDate startDate, LocalDate endDate, CalendarStatus status) {
+    public CalendarDTO(UUID id, String title, LocalDate startDate, LocalDate endDate, CalendarStatus status, LocalDate createdAt) {
         super(id);
         this.title = title;
         this.startDate = startDate;
         this.endDate = endDate;
         this.status = status;
+        this.createdAt = createdAt;
     }
 
     public String getTitle() {
@@ -58,4 +60,28 @@ public class CalendarDTO extends ExtendedDTO {
         this.status = status;
         return this;
     }
+
+    public LocalDate getCreatedAt() {
+        return createdAt;
+    }
+
+    public CalendarDTO setCreatedAt(LocalDate createdAt) {
+        this.createdAt = createdAt;
+        return this;
+    }
+
+    //maybe use this to format the dates 
+
+        /*
+    public void setStartDate(LocalDate startDate) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        this.startDate = startDate.format(formatter);
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        this.endDate = endDate.format(formatter);
+    }
+    */
 }
+

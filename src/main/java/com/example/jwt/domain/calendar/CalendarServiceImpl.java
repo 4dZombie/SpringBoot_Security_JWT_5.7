@@ -40,6 +40,15 @@ public class CalendarServiceImpl extends ExtendedServiceImpl<Calendar> implement
         return calendarRepository.findOverlappingEntries(startDate, endDate, status);
     }
 
+/*
+//When entrys overlap change status to conflict
+// this can be used for later not while dates overlap but when other conditions are met
+List<Calendar> overlappingEntries = findOverlappingEntries(startDate, endDate, CalendarStatus.PLANNED);
+overlappingEntries.forEach(entry -> {
+entry.setStatus(CalendarStatus.CONFLICT);
+    calendarRepository.save(entry);
+    });
+*/
 
     // if entrys overlap check if user1 and user2 have the same rank if yes check if user is deputy of the other user if yes pre_reject the entry else check priority and change status to pre_accept
 
