@@ -70,7 +70,7 @@ public class CalendarDTO extends ExtendedDTO {
         return this;
     }
 
-    //maybe use this to format the dates 
+    //maybe use this to format the dates
 
         /*
     public void setStartDate(LocalDate startDate) {

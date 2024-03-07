@@ -92,9 +92,10 @@ public class CalendarController {
     //get mapping for getting overlapping entries
     @GetMapping("/overlapping")
     //@PreAuthorize("hasAuthority('CAN_PLACE_ENTRY')")
-    public ResponseEntity<List<CalendarDTO>> getOverlappingEntries(@RequestParam LocalDate startDate, @RequestParam LocalDate endDate, @RequestParam CalendarStatus status) {
-        List<Calendar> calendars = calendarService.getOverlappingEntries(startDate, endDate, status);
+    public ResponseEntity<List<CalendarDTO>> getOverlappingEntries() {
+        List<Calendar> calendars = calendarService.getOverlappingEntries();
         return new ResponseEntity<>(calendarMapper.toDTOs(calendars), HttpStatus.OK);
     }
 
 }
+

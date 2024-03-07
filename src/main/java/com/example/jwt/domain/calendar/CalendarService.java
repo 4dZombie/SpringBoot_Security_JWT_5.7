@@ -15,8 +15,12 @@ public interface CalendarService extends ExtendedService<Calendar> {
     List<Calendar> findByStatus(CalendarStatus status);
 
 
-    List<Calendar> getOverlappingEntries(LocalDate startDate, LocalDate endDate, CalendarStatus status);
-    
+    List<Calendar> getOverlappingEntries();
+
     //updateEntryStatuses
     Calendar updateStatusById(UUID id, CalendarStatus status);
+
+    long calulateDaysBetween(LocalDate startDate, LocalDate endDate);
+
+
 }

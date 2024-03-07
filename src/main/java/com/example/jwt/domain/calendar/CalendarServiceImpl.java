@@ -1,12 +1,17 @@
 package com.example.jwt.domain.calendar;
 
 import com.example.jwt.core.generic.ExtendedServiceImpl;
+import com.example.jwt.domain.user.User;
+import com.example.jwt.domain.user.UserRepository;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,30 +19,77 @@ import java.util.UUID;
 public class CalendarServiceImpl extends ExtendedServiceImpl<Calendar> implements CalendarService {
 
     private final CalendarRepository calendarRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public CalendarServiceImpl(CalendarRepository calendarRepository, Logger logger) {
+    public CalendarServiceImpl(CalendarRepository calendarRepository, Logger logger,
+                               UserRepository userRepository) {
         super(calendarRepository, logger);
         this.calendarRepository = calendarRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
-    public Calendar calendarCreate(Calendar calendar) {
-        calendar.setStatus(CalendarStatus.IN_PROGRESS);
-        return calendarRepository.save(calendar);
+    public long calulateDaysBetween(LocalDate startDate, LocalDate endDate) {
+        return ChronoUnit.DAYS.between(startDate, endDate);
     }
+
+    /*
+        public boolean hasEnoughHolidays(User user, long requestedDays) {
+            long totalAllowance = (long) user.getHoliday();
+            long holidaysTaken = user.getCalendars().stream()
+                    .filter(calendar -> calendar.getStatus() == CalendarStatus.ACCEPTED)
+                    .mapToLong(calendar -> calulateDaysBetween(calendar.getStartDate(), calendar.getEndDate()))
+                    .sum();
+            long remainingHolidays = totalAllowance - holidaysTaken;
+
+            return requestedDays <= remainingHolidays;
+        }
+    */
+    private boolean hasEnoughHolidays(User user, long requestedDays) {
+        return user.getHoliday() >= requestedDays;
+    }
+
+//    @Override
+//    public Calendar calendarCreate(Calendar calendar) {
+//        User user = userRepository.getUserById(calendar.getUser().getId());
+//        long requestedDays = calulateDaysBetween(calendar.getStartDate(), calendar.getEndDate());
+//        if (!hasEnoughHolidays(user, requestedDays)) {
+//
+//        }
+//        calendar.setStatus(CalendarStatus.IN_PROGRESS);
+//        return calendarRepository.save(calendar);
+//    }
+
+    public Calendar calendarCreate(Calendar calendar) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        User user = userRepository.findByEmail(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        long requestedDays = calulateDaysBetween(calendar.getStartDate(), calendar.getEndDate());
+        if (!hasEnoughHolidays(user, requestedDays)) {
+            throw new RuntimeException("Not enough holidays");
+        } else {
+            calendar.setStatus(CalendarStatus.IN_PROGRESS);
+            //user.getCalendars().add(calendar);
+            //userRepository.save(user);
+            //return calendar;
+            calendar.setUser(user);
+            return calendarRepository.save(calendar);
+        }
+    }
+
 
     @Override
     public List<Calendar> findByStatus(CalendarStatus status) {
         return calendarRepository.findByStatus(status);
     }
 
-
-    //get overlapping entries
-    //probably wrong atm
     @Override
-    public List<Calendar> getOverlappingEntries(LocalDate startDate, LocalDate endDate, CalendarStatus status) {
-        return calendarRepository.findOverlappingEntries(startDate, endDate, status);
+    public List<Calendar> getOverlappingEntries() {
+        return calendarRepository.findOverlappingEntries();
     }
 
 /*
@@ -48,6 +100,16 @@ overlappingEntries.forEach(entry -> {
 entry.setStatus(CalendarStatus.CONFLICT);
     calendarRepository.save(entry);
     });
+
+
+    //to calculate the days of the holidays left
+            long holidaysTaken = user.getCalendars().stream()
+                .filter(calendar -> calendar.getStatus() == CalendarStatus.ACCEPTED)
+                .mapToLong(calendar -> calulateDaysBetween(calendar.getStartDate(), calendar.getEndDate()))
+                .sum();
+
+
+
 */
 
     // if entrys overlap check if user1 and user2 have the same rank if yes check if user is deputy of the other user if yes pre_reject the entry else check priority and change status to pre_accept

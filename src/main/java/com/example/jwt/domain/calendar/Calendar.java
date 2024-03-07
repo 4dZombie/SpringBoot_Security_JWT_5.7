@@ -15,6 +15,9 @@ import java.util.UUID;
 @Entity
 @Table(name = "calendar")
 public class Calendar extends ExtendedAuditEntity {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
     @Column(name = "title")
     private String title;
     @Column(name = "startDate")
@@ -24,12 +27,13 @@ public class Calendar extends ExtendedAuditEntity {
     @Enumerated(EnumType.STRING)
     private CalendarStatus status;
 
-    public Calendar(UUID id, String title, LocalDate startDate, LocalDate endDate, CalendarStatus status) {
+    public Calendar(UUID id, String title, LocalDate startDate, LocalDate endDate, CalendarStatus status, User user) {
         super(id);
         this.title = title;
         this.startDate = startDate;
         this.endDate = endDate;
         this.status = status;
+        this.user = user;
     }
 
     public Calendar() {
@@ -69,6 +73,15 @@ public class Calendar extends ExtendedAuditEntity {
 
     public Calendar setStatus(CalendarStatus status) {
         this.status = status;
+        return this;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public Calendar setUser(User user) {
+        this.user = user;
         return this;
     }
 }

@@ -18,10 +18,13 @@ public interface CalendarRepository extends ExtendedRepository<Calendar> {
 
     List<Calendar> findByStatus(CalendarStatus status);
 
-    /*
-        @Query("SELECT c FROM Calendar c WHERE (c.startDate <= :endDate AND c.endDate >= :startDate) AND c.status = :status")
-        List<Calendar> findOverlappingEntries(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate, @Param("IN_PROGRESS") CalendarStatus status);
-    }*/
-    @Query("SELECT c FROM Calendar c WHERE (c.startDate <= :endDate AND c.endDate >= :startDate) AND c.status = :status")
-    List<Calendar> findOverlappingEntries(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate, @Param("status") CalendarStatus status);
+
+    @Query("SELECT DISTINCT c1 FROM Calendar c1, Calendar c2 WHERE c1.id <> c2.id AND " +
+            "(c1.startDate BETWEEN c2.startDate AND c2.endDate OR " +
+            "c1.endDate BETWEEN c2.startDate AND c2.endDate OR " +
+            "c2.startDate BETWEEN c1.startDate AND c1.endDate OR " +
+            "c2.endDate BETWEEN c1.startDate AND c1.endDate)")
+    List<Calendar> findOverlappingEntries();
+
+
 }
