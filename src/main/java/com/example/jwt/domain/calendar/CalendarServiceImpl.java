@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
@@ -46,20 +47,11 @@ public class CalendarServiceImpl extends ExtendedServiceImpl<Calendar> implement
             return requestedDays <= remainingHolidays;
         }
     */
+
     private boolean hasEnoughHolidays(User user, long requestedDays) {
         return user.getHoliday() >= requestedDays;
     }
 
-//    @Override
-//    public Calendar calendarCreate(Calendar calendar) {
-//        User user = userRepository.getUserById(calendar.getUser().getId());
-//        long requestedDays = calulateDaysBetween(calendar.getStartDate(), calendar.getEndDate());
-//        if (!hasEnoughHolidays(user, requestedDays)) {
-//
-//        }
-//        calendar.setStatus(CalendarStatus.IN_PROGRESS);
-//        return calendarRepository.save(calendar);
-//    }
 
     public Calendar calendarCreate(Calendar calendar) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -73,24 +65,53 @@ public class CalendarServiceImpl extends ExtendedServiceImpl<Calendar> implement
             throw new RuntimeException("Not enough holidays");
         } else {
             calendar.setStatus(CalendarStatus.IN_PROGRESS);
-            //user.getCalendars().add(calendar);
-            //userRepository.save(user);
-            //return calendar;
             calendar.setUser(user);
             return calendarRepository.save(calendar);
         }
     }
-
 
     @Override
     public List<Calendar> findByStatus(CalendarStatus status) {
         return calendarRepository.findByStatus(status);
     }
 
+    //updateEntryStatuses
     @Override
-    public List<Calendar> getOverlappingEntries() {
+    public Calendar updateStatusById(UUID id, CalendarStatus status) {
+        return calendarRepository.findById(id).map(calendarToUpdate -> {
+            calendarToUpdate.setStatus(status);
+            return calendarRepository.save(calendarToUpdate);
+        }).orElseThrow(() -> new EntityNotFoundException("Calendar not found with id: " + id));
+    }
+
+    @Override
+    public Boolean getOverlappingEntries() {
         return calendarRepository.findOverlappingEntries();
     }
+
+    @Override
+    public Boolean getOverlappingRanks() {
+        return calendarRepository.findOverlappingRanks();
+    }
+
+    @Override
+    public Boolean getOverlappingDeputies() {
+        return calendarRepository.findOverlappingDeputies();
+    }
+
+    @Override
+    public Boolean getOverlappingPrioritys() {
+        return calendarRepository.findOverlappingPrioritys();
+    }
+
+    @Override
+    public List<LocalDateTime> getCreatedAt() {
+        return calendarRepository.findCreatedAt();
+    }
+
+
+
+
 
 /*
 //When entrys overlap change status to conflict
@@ -119,16 +140,6 @@ entry.setStatus(CalendarStatus.CONFLICT);
 
 
     //if entrys dont overlap pre_accept
-
-
-    //updateEntryStatuses
-    @Override
-    public Calendar updateStatusById(UUID id, CalendarStatus status) {
-        return calendarRepository.findById(id).map(calendarToUpdate -> {
-            calendarToUpdate.setStatus(status);
-            return calendarRepository.save(calendarToUpdate);
-        }).orElseThrow(() -> new EntityNotFoundException("Calendar not found with id: " + id));
-    }
 
 
     //if user have overlapping entrys with its deputy pre_reject the entry
