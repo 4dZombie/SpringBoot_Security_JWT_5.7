@@ -13,7 +13,9 @@ import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -65,7 +67,7 @@ public class CalendarServiceImpl extends ExtendedServiceImpl<Calendar> implement
             throw new RuntimeException("Not enough holidays");
         } else {
             calendar.setStatus(CalendarStatus.IN_PROGRESS);
-            calendar.setUser(user);
+            calendar.setUsers(Set.of(user));
             return calendarRepository.save(calendar);
         }
     }
@@ -85,32 +87,119 @@ public class CalendarServiceImpl extends ExtendedServiceImpl<Calendar> implement
     }
 
     @Override
-    public Boolean getOverlappingEntries() {
+    public List<Calendar> getOverlappingEntriesQuery() {
         return calendarRepository.findOverlappingEntries();
     }
 
     @Override
-    public Boolean getOverlappingRanks() {
+    public List<Calendar> getOverlappingRanksQuery() {
+        return calendarRepository.findOverlappingRanks();
+    }
+
+    //@Override
+    public List<Calendar> getOverlappingRanks() {
+        List<Calendar> calendar_validate = getOverlappingEntriesQuery();
+        for(Calendar entry : calendar_validate) {
+
+        }
         return calendarRepository.findOverlappingRanks();
     }
 
     @Override
-    public Boolean getOverlappingDeputies() {
+    public List<Calendar> getOverlappingDeputiesQuery() {
         return calendarRepository.findOverlappingDeputies();
     }
 
     @Override
-    public Boolean getOverlappingPrioritys() {
+    public List<Calendar> getOverlappingPrioritysQuery() {
         return calendarRepository.findOverlappingPrioritys();
     }
 
     @Override
-    public List<LocalDateTime> getCreatedAt() {
+    public List<LocalDateTime> getCreatedAtQuery() {
         return calendarRepository.findCreatedAt();
     }
 
+    //validate calendar entrys with the overlapping entrys
+    //WIP TODO
+    public List<Calendar> preValidationOfEntrys(Calendar calendar) {
+        List<Calendar> calendar_validate = getOverlappingEntriesQuery();
+        List<Calendar> overlappingEntries = calendarRepository.findOverlappingEntries();
+        // Initialize lists to track different conditions
+        List<Calendar> preAcceptedForRanks = new ArrayList<>();
+        List<Calendar> preAcceptedForDeputies = new ArrayList<>();
+        List<Calendar> preAcceptedForPriorities = new ArrayList<>();
+
+        //I could maybe do a list with all calendar that went through the pre_accepted status and instead of changing status each time put them
+        //all in one list and then change the status of all of them at once
+
+        for (Calendar entry : overlappingEntries) {
+            if (!calendarRepository.findOverlappingEntries().contains(entry)) {
+                preAcceptedForRanks.add(entry);
+                return preAcceptedForRanks;
+            } else {
+                entry.setStatus(CalendarStatus.PRE_ACCEPTED);
+            }
+        }
+
+        for (Calendar entry : preAcceptedForRanks) {
+            if (!calendarRepository.findOverlappingEntries().contains(entry)) {
+                preAcceptedForDeputies.add(entry);
+                return preAcceptedForDeputies;
+            } else {
+                entry.setStatus(CalendarStatus.PRE_ACCEPTED);
+            }
+        }
+
+        for (Calendar entry : preAcceptedForDeputies) {
+            if (!calendarRepository.findOverlappingEntries().contains(entry)) {
+                preAcceptedForPriorities.add(entry);
+                return preAcceptedForPriorities;
+            } else {
+                entry.setStatus(CalendarStatus.PRE_ACCEPTED);
+            }
+        }
+
+        //reminder only no actual use
+        if (calendar_validate.isEmpty()) {
+            System.out.println("No overlapping entries");
+        } else {
+            calendar_validate = calendarRepository.findOverlappingRanks();
+        } if (calendar_validate.isEmpty()) {
+            System.out.println("No overlapping ranks");
+        } else {
+            calendar_validate = calendarRepository.findOverlappingDeputies();
+        } if (calendar_validate.isEmpty()) {
+            System.out.println("No overlapping deputies");
+        } else {
+            calendar_validate = calendarRepository.findOverlappingPrioritys();
+        } if (calendar_validate.isEmpty()) {
+            System.out.println("No overlapping prioritys");
+        }
+        return null;
+    }
 
 
+    /*
+
+
+    // Step 5: Update the status of entries based on your "pre-accepted" conditions
+    // This might involve saving them back to the repository with their new status
+
+    // The return value depends on what to do next. For now, return the entries pre-accepted for ranks as an example
+}
+
+
+
+       calendars.forEach(entry -> {
+            if (entry.getStatus() == CalendarStatus.IN_PROGRESS) {
+                entry.setStatus(CalendarStatus.PRE_ACCEPTED);
+            } else {
+                entry.setStatus(CalendarStatus.PRE_REJECTED);
+            }
+        });
+
+        */
 
 
 /*

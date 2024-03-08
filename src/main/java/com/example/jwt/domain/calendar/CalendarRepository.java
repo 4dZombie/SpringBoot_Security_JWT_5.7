@@ -25,20 +25,20 @@ public interface CalendarRepository extends ExtendedRepository<Calendar> {
             "c1.endDate BETWEEN c2.startDate AND c2.endDate OR " +
             "c2.startDate BETWEEN c1.startDate AND c1.endDate OR " +
             "c2.endDate BETWEEN c1.startDate AND c1.endDate)")
-    Boolean findOverlappingEntries();
+    List<Calendar> findOverlappingEntries();
 
     @Query("SELECT u1 FROM User u1, User u2 WHERE u1.id <> u2.id AND " +
             "u1.rank = u2.rank")
-    Boolean findOverlappingRanks();
+    List<Calendar> findOverlappingRanks();
 
 
     @Query("SELECT u1 FROM User u1, User u2 WHERE u1.id <> u2.id AND " +
             "u1.deputy = u2.deputy")
-    Boolean findOverlappingDeputies();
+    List<Calendar> findOverlappingDeputies();
 
     @Query("SELECT u1 FROM User u1, User u2 WHERE u1.id <> u2.id AND " +
             "u1.priority = u2.priority")
-    Boolean findOverlappingPrioritys();
+    List<Calendar> findOverlappingPrioritys();
 
     @Query("SELECT c1.createdAt, c2.createdAt FROM Calendar c1, Calendar c2 WHERE c1.id <> c2.id AND c1.createdAt = c2.createdAt")
     List<LocalDateTime> findCreatedAt();

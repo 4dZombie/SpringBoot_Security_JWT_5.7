@@ -2,13 +2,9 @@ package com.example.jwt.domain.calendar;
 
 import com.example.jwt.domain.calendar.dto.CalendarDTO;
 import com.example.jwt.domain.calendar.dto.CalendarMapper;
-import com.example.jwt.domain.role.Role;
-import com.example.jwt.domain.role.dto.RoleDTO;
 import com.example.jwt.domain.user.User;
 import com.example.jwt.domain.user.UserDetailsImpl;
 import com.example.jwt.domain.user.UserService;
-import com.example.jwt.domain.user.dto.UserDTO;
-import com.example.jwt.domain.user.dto.UserRegisterDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,10 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Validated
@@ -93,7 +86,7 @@ public class CalendarController {
     @GetMapping("/overlapping")
     //@PreAuthorize("hasAuthority('CAN_PLACE_ENTRY')")
     public ResponseEntity<List<CalendarDTO>> getOverlappingEntries() {
-        List<Calendar> calendars = calendarService.getOverlappingEntries();
+        List<Calendar> calendars = calendarService.getOverlappingEntriesQuery();
         return new ResponseEntity<>(calendarMapper.toDTOs(calendars), HttpStatus.OK);
     }
 

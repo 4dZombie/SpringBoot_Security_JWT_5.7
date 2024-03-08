@@ -44,11 +44,6 @@ public class User extends ExtendedAuditEntity {
 
     @Column(name = "holiday")
     private double holiday;
-  /*
-  @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-  @JoinColumn(name = "calendar_id")
-    private Set<Calendar> calendars = new HashSet<>();
-*/
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
