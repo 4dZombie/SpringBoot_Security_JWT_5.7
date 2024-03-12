@@ -1,6 +1,7 @@
 package com.example.jwt.domain.calendar;
 
 import com.example.jwt.core.generic.ExtendedService;
+import com.example.jwt.domain.user.User;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -10,8 +11,7 @@ import java.util.UUID;
 public interface CalendarService extends ExtendedService<Calendar> {
 
 
-    Calendar calendarCreate(Calendar calendar);
-
+    Calendar calendarCreate(Calendar calendar, User user);
 
     List<Calendar> findByStatus(CalendarStatus status);
 

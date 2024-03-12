@@ -1,21 +1,18 @@
 package com.example.jwt.domain.calendar;
 
 import com.example.jwt.core.generic.ExtendedAuditEntity;
-import com.example.jwt.core.generic.ExtendedEntity;
-import com.example.jwt.domain.role.Role;
 import com.example.jwt.domain.user.User;
+import org.springframework.scheduling.annotation.Async;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 @Entity
 @Table(name = "calendar")
 public class Calendar extends ExtendedAuditEntity {
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
     @Column(name = "title")
@@ -75,6 +72,7 @@ public class Calendar extends ExtendedAuditEntity {
         this.status = status;
         return this;
     }
+
 
     public User getUser() {
         return user;

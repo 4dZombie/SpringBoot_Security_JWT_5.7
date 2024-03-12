@@ -43,13 +43,14 @@ public class CalendarController {
     @PostMapping(value = "/entry", consumes = "application/json")
     @PreAuthorize("hasAuthority('CAN_PLACE_ENTRY')")
     public ResponseEntity<CalendarDTO> entry(@Valid @RequestBody CalendarDTO calendarDTO, Authentication authentication) {
-        Calendar calendar = calendarService.calendarCreate(calendarMapper.fromCalendarDTO(calendarDTO));
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         User user = userDetails.getUser();
+        Calendar calendar = calendarService.calendarCreate(calendarMapper.fromCalendarDTO(calendarDTO), user);
         user.getCalendars().add(calendar);
         userService.save(user);
         return new ResponseEntity<>(calendarMapper.toDTO(calendar), HttpStatus.CREATED);
     }
+
 
     @GetMapping("/user/{userId}/calendars")
     @PreAuthorize("hasAuthority('CAN_PLACE_ENTRY')")

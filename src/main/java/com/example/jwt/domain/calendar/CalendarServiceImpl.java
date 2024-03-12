@@ -5,8 +5,6 @@ import com.example.jwt.domain.user.User;
 import com.example.jwt.domain.user.UserRepository;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -15,7 +13,6 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -25,8 +22,7 @@ public class CalendarServiceImpl extends ExtendedServiceImpl<Calendar> implement
     private final UserRepository userRepository;
 
     @Autowired
-    public CalendarServiceImpl(CalendarRepository calendarRepository, Logger logger,
-                               UserRepository userRepository) {
+    public CalendarServiceImpl(CalendarRepository calendarRepository, Logger logger, UserRepository userRepository) {
         super(calendarRepository, logger);
         this.calendarRepository = calendarRepository;
         this.userRepository = userRepository;
@@ -55,22 +51,20 @@ public class CalendarServiceImpl extends ExtendedServiceImpl<Calendar> implement
     }
 
 
-    public Calendar calendarCreate(Calendar calendar) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-
-        User user = userRepository.findByEmail(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
+    public Calendar calendarCreate(Calendar calendar, User user) {
         long requestedDays = calulateDaysBetween(calendar.getStartDate(), calendar.getEndDate());
         if (!hasEnoughHolidays(user, requestedDays)) {
             throw new RuntimeException("Not enough holidays");
         } else {
+            // not working
+            calendar.setUser(calendar.getUser());
+            System.out.println("Calendar Create set User inhalt" + calendar.setUser(calendar.getUser()));
+            //Output: Calendar Create set User inhaltcom.example.jwt.domain.calendar.Calendar@5d2b23c1
             calendar.setStatus(CalendarStatus.IN_PROGRESS);
-            calendar.setUsers(Set.of(user));
             return calendarRepository.save(calendar);
         }
     }
+
 
     @Override
     public List<Calendar> findByStatus(CalendarStatus status) {
@@ -99,7 +93,7 @@ public class CalendarServiceImpl extends ExtendedServiceImpl<Calendar> implement
     //@Override
     public List<Calendar> getOverlappingRanks() {
         List<Calendar> calendar_validate = getOverlappingEntriesQuery();
-        for(Calendar entry : calendar_validate) {
+        for (Calendar entry : calendar_validate) {
 
         }
         return calendarRepository.findOverlappingRanks();
@@ -165,15 +159,18 @@ public class CalendarServiceImpl extends ExtendedServiceImpl<Calendar> implement
             System.out.println("No overlapping entries");
         } else {
             calendar_validate = calendarRepository.findOverlappingRanks();
-        } if (calendar_validate.isEmpty()) {
+        }
+        if (calendar_validate.isEmpty()) {
             System.out.println("No overlapping ranks");
         } else {
             calendar_validate = calendarRepository.findOverlappingDeputies();
-        } if (calendar_validate.isEmpty()) {
+        }
+        if (calendar_validate.isEmpty()) {
             System.out.println("No overlapping deputies");
         } else {
             calendar_validate = calendarRepository.findOverlappingPrioritys();
-        } if (calendar_validate.isEmpty()) {
+        }
+        if (calendar_validate.isEmpty()) {
             System.out.println("No overlapping prioritys");
         }
         return null;

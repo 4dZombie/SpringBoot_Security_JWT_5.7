@@ -45,7 +45,7 @@ public class User extends ExtendedAuditEntity {
     @Column(name = "holiday")
     private double holiday;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "users_calendar",
             joinColumns = @JoinColumn(name = "users_id", referencedColumnName = "id"),

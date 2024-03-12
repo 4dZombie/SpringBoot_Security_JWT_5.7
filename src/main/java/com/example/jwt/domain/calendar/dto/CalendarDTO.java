@@ -13,16 +13,19 @@ public class CalendarDTO extends ExtendedDTO {
     private CalendarStatus status;
     private LocalDate createdAt;
 
+    private UUID userId;
+
     public CalendarDTO() {
     }
 
-    public CalendarDTO(UUID id, String title, LocalDate startDate, LocalDate endDate, CalendarStatus status, LocalDate createdAt) {
+    public CalendarDTO(UUID id, String title, LocalDate startDate, LocalDate endDate, CalendarStatus status, LocalDate createdAt, UUID userId) {
         super(id);
         this.title = title;
         this.startDate = startDate;
         this.endDate = endDate;
         this.status = status;
         this.createdAt = createdAt;
+        this.userId = userId;
     }
 
     public String getTitle() {
@@ -67,6 +70,15 @@ public class CalendarDTO extends ExtendedDTO {
 
     public CalendarDTO setCreatedAt(LocalDate createdAt) {
         this.createdAt = createdAt;
+        return this;
+    }
+
+    public UUID getUserId() {
+        return userId;
+    }
+
+    public CalendarDTO setUserId(UUID userId) {
+        this.userId = userId;
         return this;
     }
 
