@@ -6,8 +6,11 @@ import com.example.jwt.domain.user.UserRepository;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.PersistenceContext;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -21,11 +24,15 @@ public class CalendarServiceImpl extends ExtendedServiceImpl<Calendar> implement
     private final CalendarRepository calendarRepository;
     private final UserRepository userRepository;
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     @Autowired
-    public CalendarServiceImpl(CalendarRepository calendarRepository, Logger logger, UserRepository userRepository) {
+    public CalendarServiceImpl(CalendarRepository calendarRepository, Logger logger, UserRepository userRepository, EntityManager entityManager) {
         super(calendarRepository, logger);
         this.calendarRepository = calendarRepository;
         this.userRepository = userRepository;
+        this.entityManager = entityManager;
     }
 
     @Override
@@ -50,14 +57,14 @@ public class CalendarServiceImpl extends ExtendedServiceImpl<Calendar> implement
         return user.getHoliday() >= requestedDays;
     }
 
-
+    @Transactional
     public Calendar calendarCreate(Calendar calendar, User user) {
         long requestedDays = calulateDaysBetween(calendar.getStartDate(), calendar.getEndDate());
         if (!hasEnoughHolidays(user, requestedDays)) {
             throw new RuntimeException("Not enough holidays");
         } else {
-            // not working
-            calendar.setUser(calendar.getUser());
+            User managedUser = entityManager.merge(user);
+            calendar.setUser(managedUser);
             System.out.println("Calendar Create set User inhalt" + calendar.setUser(calendar.getUser()));
             //Output: Calendar Create set User inhaltcom.example.jwt.domain.calendar.Calendar@5d2b23c1
             calendar.setStatus(CalendarStatus.IN_PROGRESS);

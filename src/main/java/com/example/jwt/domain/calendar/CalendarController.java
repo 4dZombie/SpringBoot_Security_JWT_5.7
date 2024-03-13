@@ -4,6 +4,7 @@ import com.example.jwt.domain.calendar.dto.CalendarDTO;
 import com.example.jwt.domain.calendar.dto.CalendarMapper;
 import com.example.jwt.domain.user.User;
 import com.example.jwt.domain.user.UserDetailsImpl;
+import com.example.jwt.domain.user.UserRepository;
 import com.example.jwt.domain.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
@@ -25,6 +27,8 @@ public class CalendarController {
     private UserService userService;
     private final CalendarService calendarService;
     private final CalendarMapper calendarMapper;
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     public CalendarController(CalendarService calendarService, CalendarMapper calendarMapper, UserService userService) {
@@ -40,15 +44,21 @@ public class CalendarController {
         return new ResponseEntity<>(calendarMapper.toDTOs(calendars), HttpStatus.OK);
     }
 
+
     @PostMapping(value = "/entry", consumes = "application/json")
     @PreAuthorize("hasAuthority('CAN_PLACE_ENTRY')")
     public ResponseEntity<CalendarDTO> entry(@Valid @RequestBody CalendarDTO calendarDTO, Authentication authentication) {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        User user = userDetails.getUser();
+        User user = userRepository.findById(userDetails.getUser().getId())
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        System.out.println("User fetched from database: " + user);
         Calendar calendar = calendarService.calendarCreate(calendarMapper.fromCalendarDTO(calendarDTO), user);
         user.getCalendars().add(calendar);
         userService.save(user);
-        return new ResponseEntity<>(calendarMapper.toDTO(calendar), HttpStatus.CREATED);
+        CalendarDTO responseDTO = calendarMapper.toDTO(calendar);
+        responseDTO.setUserId(user.getId());
+
+        return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
     }
 
 

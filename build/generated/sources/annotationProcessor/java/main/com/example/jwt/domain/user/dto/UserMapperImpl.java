@@ -31,7 +31,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-03-07T14:48:15+0100",
+    date = "2024-03-13T08:55:15+0100",
     comments = "version: 1.5.5.Final, compiler: IncrementalProcessingEnvironment from gradle-language-java-7.5.jar, environment: Java 17.0.9 (Eclipse Adoptium)"
 )
 @Component
@@ -106,39 +106,6 @@ public class UserMapperImpl implements UserMapper {
     }
 
     @Override
-    public UserDTO toDTO(User BO) {
-        if ( BO == null ) {
-            return null;
-        }
-
-        UserDTO userDTO = new UserDTO();
-
-        userDTO.setId( BO.getId() );
-        userDTO.setFirstName( BO.getFirstName() );
-        userDTO.setLastName( BO.getLastName() );
-        userDTO.setEmail( BO.getEmail() );
-        userDTO.setEmployment( BO.getEmployment() );
-        userDTO.setAge( BO.getAge() );
-        userDTO.setStreet( BO.getStreet() );
-        if ( BO.getKids() != null ) {
-            userDTO.setKids( BO.getKids() );
-        }
-        if ( BO.getStudent() != null ) {
-            userDTO.setStudent( BO.getStudent() );
-        }
-        userDTO.setHoliday( BO.getHoliday() );
-        userDTO.setYearsOfEmployment( BO.getYearsOfEmployment() );
-        userDTO.setDeputy( userToDeputyDTO( BO.getDeputy() ) );
-        userDTO.setPriority( priorityToPriorityDTO( BO.getPriority() ) );
-        userDTO.setDistrict( districtToDistrictDTO( BO.getDistrict() ) );
-        userDTO.setRank( rankToRankDTO( BO.getRank() ) );
-        userDTO.setRoles( roleSetToRoleDTOSet( BO.getRoles() ) );
-        userDTO.setCalendars( calendarSetToCalendarDTOSet( BO.getCalendars() ) );
-
-        return userDTO;
-    }
-
-    @Override
     public List<UserDTO> toDTOs(List<User> BOs) {
         if ( BOs == null ) {
             return null;
@@ -194,6 +161,39 @@ public class UserMapperImpl implements UserMapper {
         user.setPriority( priorityDTOToPriority( dto.getPriority() ) );
 
         return user;
+    }
+
+    @Override
+    public UserDTO toDTO(User entity) {
+        if ( entity == null ) {
+            return null;
+        }
+
+        UserDTO userDTO = new UserDTO();
+
+        userDTO.setId( entity.getId() );
+        userDTO.setFirstName( entity.getFirstName() );
+        userDTO.setLastName( entity.getLastName() );
+        userDTO.setEmail( entity.getEmail() );
+        userDTO.setEmployment( entity.getEmployment() );
+        userDTO.setAge( entity.getAge() );
+        userDTO.setStreet( entity.getStreet() );
+        if ( entity.getKids() != null ) {
+            userDTO.setKids( entity.getKids() );
+        }
+        if ( entity.getStudent() != null ) {
+            userDTO.setStudent( entity.getStudent() );
+        }
+        userDTO.setHoliday( entity.getHoliday() );
+        userDTO.setYearsOfEmployment( entity.getYearsOfEmployment() );
+        userDTO.setDeputy( userToDeputyDTO( entity.getDeputy() ) );
+        userDTO.setPriority( priorityToPriorityDTO( entity.getPriority() ) );
+        userDTO.setDistrict( districtToDistrictDTO( entity.getDistrict() ) );
+        userDTO.setRank( rankToRankDTO( entity.getRank() ) );
+        userDTO.setRoles( roleSetToRoleDTOSet( entity.getRoles() ) );
+        userDTO.setCalendars( calendarSetToCalendarDTOSet( entity.getCalendars() ) );
+
+        return userDTO;
     }
 
     private XMLGregorianCalendar localDateToXmlGregorianCalendar( LocalDate localDate ) {

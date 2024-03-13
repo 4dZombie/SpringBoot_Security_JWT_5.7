@@ -12,7 +12,7 @@ import java.util.concurrent.CompletableFuture;
 @Entity
 @Table(name = "calendar")
 public class Calendar extends ExtendedAuditEntity {
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "user_id")
     private User user;
     @Column(name = "title")
