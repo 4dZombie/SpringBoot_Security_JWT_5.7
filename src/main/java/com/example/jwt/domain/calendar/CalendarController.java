@@ -44,14 +44,12 @@ public class CalendarController {
         return new ResponseEntity<>(calendarMapper.toDTOs(calendars), HttpStatus.OK);
     }
 
-
     @PostMapping(value = "/entry", consumes = "application/json")
     @PreAuthorize("hasAuthority('CAN_PLACE_ENTRY')")
     public ResponseEntity<CalendarDTO> entry(@Valid @RequestBody CalendarDTO calendarDTO, Authentication authentication) {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         User user = userRepository.findById(userDetails.getUser().getId())
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
-        System.out.println("User fetched from database: " + user);
         Calendar calendar = calendarService.calendarCreate(calendarMapper.fromCalendarDTO(calendarDTO), user);
         user.getCalendars().add(calendar);
         userService.save(user);
@@ -101,5 +99,20 @@ public class CalendarController {
         return new ResponseEntity<>(calendarMapper.toDTOs(calendars), HttpStatus.OK);
     }
 
+    @GetMapping("/overlapping/rank")
+    //@PreAuthorize("hasAuthority('CAN_PLACE_ENTRY')")
+    public ResponseEntity<List<CalendarDTO>> getEntriesWithOverlappingRanks() {
+        List<Calendar> calendarsWithMatchingRanks = calendarService.getOverlappingRanks();
+        List<CalendarDTO> calendarDTOs = calendarMapper.toDTOs(calendarsWithMatchingRanks);
+        return new ResponseEntity<>(calendarDTOs, HttpStatus.OK);
+    }
+
+    @GetMapping("/overlapping/deputy")
+    //@PreAuthorize("hasAuthority('CAN_PLACE_ENTRY')")
+    public ResponseEntity<List<CalendarDTO>> getEntriesWithOverlappingDeputies() {
+        List<Calendar> calendarsWithMatchingDeputies = calendarService.getOverlappingDeputies();
+        List<CalendarDTO> calendarDTOs = calendarMapper.toDTOs(calendarsWithMatchingDeputies);
+        return new ResponseEntity<>(calendarDTOs, HttpStatus.OK);
+    }
 }
 

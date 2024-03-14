@@ -1,6 +1,7 @@
 package com.example.jwt.domain.calendar;
 
 import com.example.jwt.core.generic.ExtendedServiceImpl;
+import com.example.jwt.domain.Rank.Rank;
 import com.example.jwt.domain.user.User;
 import com.example.jwt.domain.user.UserRepository;
 import org.slf4j.Logger;
@@ -14,9 +15,7 @@ import javax.persistence.PersistenceContext;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class CalendarServiceImpl extends ExtendedServiceImpl<Calendar> implements CalendarService {
@@ -65,13 +64,10 @@ public class CalendarServiceImpl extends ExtendedServiceImpl<Calendar> implement
         } else {
             User managedUser = entityManager.merge(user);
             calendar.setUser(managedUser);
-            System.out.println("Calendar Create set User inhalt" + calendar.setUser(calendar.getUser()));
-            //Output: Calendar Create set User inhaltcom.example.jwt.domain.calendar.Calendar@5d2b23c1
             calendar.setStatus(CalendarStatus.IN_PROGRESS);
             return calendarRepository.save(calendar);
         }
     }
-
 
     @Override
     public List<Calendar> findByStatus(CalendarStatus status) {
@@ -98,13 +94,146 @@ public class CalendarServiceImpl extends ExtendedServiceImpl<Calendar> implement
     }
 
     //@Override
-    public List<Calendar> getOverlappingRanks() {
-        List<Calendar> calendar_validate = getOverlappingEntriesQuery();
-        for (Calendar entry : calendar_validate) {
+//    public List<Calendar> getOverlappingRanks() {
+//        List<Calendar> overlappingEntries = getOverlappingEntriesQuery();
+//        List<Calendar> entriesWithMatchingRanks = new ArrayList<>();
+//        Map<UUID, Set<Rank>> overlapGroupRanks = new HashMap<>();
+//
+//        for (Calendar entry : overlappingEntries) {
+//            Rank currentUserRank = entry.getUser().getRank();
+//            System.out.println("3 Current user rank: " + currentUserRank);
+//
+//            UUID entryGroupId = entry.getId();
+//            System.out.println("4 Entry group ID: " + entryGroupId);
+//
+//            Set<Rank> ranksInGroup = overlapGroupRanks.getOrDefault(entryGroupId, new HashSet<>());
+//            System.out.println("5 Ranks in group: " + ranksInGroup);
+//
+//            if (ranksInGroup.contains(currentUserRank)) {
+//                entriesWithMatchingRanks.add(entry);
+//                System.out.println("6 Entries with matching ranks: " + entriesWithMatchingRanks);
+//            } else {
+//                ranksInGroup.add(currentUserRank);
+//                overlapGroupRanks.put(entryGroupId, ranksInGroup);
+//                System.out.println("7 Overlap group ranks: " + overlapGroupRanks);
+//                System.out.println("8 Ranks in group: " + ranksInGroup);
+//
+//            }
+//        }
+//        return entriesWithMatchingRanks;
+//    }
 
+
+    public List<Calendar> getOverlappingRanks() {
+        List<Calendar> overlappingEntries = getOverlappingEntriesQuery();
+        List<Calendar> entriesWithMatchingRanks = new ArrayList<>();
+
+        for (int i = 0; i < overlappingEntries.size(); i++) {
+            for (int j = i + 1; j < overlappingEntries.size(); j++) {
+                Calendar entry1 = overlappingEntries.get(i);
+                Calendar entry2 = overlappingEntries.get(j);
+
+                if (entry1.getUser().getId().equals(entry2.getUser().getId()) && doDatesOverlap(entry1, entry2)) {
+                    throw new IllegalStateException("User cannot have overlapping entries: User ID " + entry1.getUser().getId());
+
+                }
+
+                if (!entry1.getUser().getId().equals(entry2.getUser().getId()) && doDatesOverlap(entry1, entry2) && entry1.getUser().getRank().equals(entry2.getUser().getRank())) {
+                    if (!entriesWithMatchingRanks.contains(entry1)) {
+                        entriesWithMatchingRanks.add(entry1);
+                    }
+                    if (!entriesWithMatchingRanks.contains(entry2)) {
+                        entriesWithMatchingRanks.add(entry2);
+                    }
+                }
+            }
         }
-        return calendarRepository.findOverlappingRanks();
+
+        return entriesWithMatchingRanks;
     }
+
+    private boolean doDatesOverlap(Calendar entry1, Calendar entry2) {
+        return entry1.getStartDate().isBefore(entry2.getEndDate()) && entry2.getStartDate().isBefore(entry1.getEndDate());
+    }
+
+//    public List<Calendar> getOverlappingDeputies() {
+//        List<Calendar> entriesWithMatchingRanks = getOverlappingRanks();
+//        List<Calendar> entriesWithDeputyConflicts = new ArrayList<>();
+//
+//        for (int i = 0; i < entriesWithMatchingRanks.size(); i++) {
+//            for (int j = i + 1; j < entriesWithMatchingRanks.size(); j++) {
+//                Calendar entry1 = entriesWithMatchingRanks.get(i);
+//                Calendar entry2 = entriesWithMatchingRanks.get(j);
+//
+//                User user1 = entry1.getUser();
+//                User user2 = entry2.getUser();
+//
+//                if (user1.getDeputy() != null && user2.getDeputy() != null) {
+//                    UUID deputy1Id = user1.getDeputy().getId();
+//                    UUID deputy2Id = user2.getDeputy().getId();
+//
+//                    if (deputy1Id.equals(user2.getId()) || deputy2Id.equals(user1.getId())) {
+//                        System.out.println("Conflict: Users have overlapping entries with their deputies involved.");
+//                        entriesWithDeputyConflicts.add(entry1);
+//                        entriesWithDeputyConflicts.add(entry2);
+//                    }
+//                }
+//            }
+//        }
+//
+//        return entriesWithDeputyConflicts;
+//    }
+
+
+    // Not tested yet issue was I created user and entrys which overlap set another user whith a overlapping entry as a deputy but the list was empty
+    //when I used the endpoint to test out the logic
+    public List<Calendar> getOverlappingDeputies() {
+        List<Calendar> entriesWithMatchingRanks = getOverlappingRanks();
+        List<Calendar> entriesWithDeputyConflicts = new ArrayList<>();
+
+        System.out.println("Entries with Matching Ranks: " + entriesWithMatchingRanks.size());
+
+        for (int i = 0; i < entriesWithMatchingRanks.size(); i++) {
+            Calendar entry1 = entriesWithMatchingRanks.get(i);
+            User user1 = entry1.getUser();
+            User deputy1 = user1.getDeputy(); // Assuming getDeputy returns a User object directly
+
+            for (int j = i + 1; j < entriesWithMatchingRanks.size(); j++) {
+                Calendar entry2 = entriesWithMatchingRanks.get(j);
+                User user2 = entry2.getUser();
+
+                if (deputy1 != null && user2.equals(deputy1)) {
+                    System.out.println("Deputy Conflict Found: " + entry1.getId() + " & " + entry2.getId());
+                    entriesWithDeputyConflicts.add(entry1);
+                    entriesWithDeputyConflicts.add(entry2);
+                } else {
+                    System.out.println("No Deputy Conflict or Deputy is Null for User: " + user1.getId());
+                }
+            }
+        }
+
+        System.out.println("Entries with Deputy Conflicts: " + entriesWithDeputyConflicts.size());
+        return entriesWithDeputyConflicts;
+    }
+
+
+//Here no actual use atm
+
+
+//    @Override
+//    public List<Calendar> getOverlappingPrioritys() {
+//        return null;
+//    }
+//    @Override
+//    public List<LocalDateTime> getCreatedAt() {
+//        return null;
+//    }
+//
+//    @Override
+//    public List<Calendar> getOverlappingEntries() {
+//        return null;
+//    }
+    // until here no actual use atm
 
     @Override
     public List<Calendar> getOverlappingDeputiesQuery() {
@@ -126,7 +255,6 @@ public class CalendarServiceImpl extends ExtendedServiceImpl<Calendar> implement
     public List<Calendar> preValidationOfEntrys(Calendar calendar) {
         List<Calendar> calendar_validate = getOverlappingEntriesQuery();
         List<Calendar> overlappingEntries = calendarRepository.findOverlappingEntries();
-        // Initialize lists to track different conditions
         List<Calendar> preAcceptedForRanks = new ArrayList<>();
         List<Calendar> preAcceptedForDeputies = new ArrayList<>();
         List<Calendar> preAcceptedForPriorities = new ArrayList<>();
@@ -183,7 +311,7 @@ public class CalendarServiceImpl extends ExtendedServiceImpl<Calendar> implement
         return null;
     }
 
-
+// mostly ideas or parts of code that I could use later prob just gets deleted anyways
     /*
 
 

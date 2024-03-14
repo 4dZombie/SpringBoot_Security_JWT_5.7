@@ -12,9 +12,8 @@ public class CalendarDTO extends ExtendedDTO {
     private LocalDate endDate;
     private CalendarStatus status;
     private LocalDate createdAt;
-
     private UUID userId;
-
+    
     public CalendarDTO() {
     }
 

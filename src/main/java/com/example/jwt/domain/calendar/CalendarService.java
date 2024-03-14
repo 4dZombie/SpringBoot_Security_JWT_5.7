@@ -27,5 +27,17 @@ public interface CalendarService extends ExtendedService<Calendar> {
 
     List<Calendar> getOverlappingPrioritysQuery();
 
+    //List<LocalDateTime> getCreatedAt();
+
+    //List<Calendar> getOverlappingEntries();
+
+    List<Calendar> getOverlappingRanks();
+
     List<LocalDateTime> getCreatedAtQuery();
+
+    List<Calendar> getOverlappingDeputies();
+
+    //List<Calendar> getOverlappingPrioritys();
+
+    //List<LocalDateTime> getCreatedAtQuery();
 }
