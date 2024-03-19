@@ -5,6 +5,7 @@ import com.example.jwt.domain.Rank.DTO.RankMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,18 +29,21 @@ public class RankController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('CAN_SEE_RANK')")
     public ResponseEntity<RankDTO> retrieveById(@PathVariable UUID id) {
         Rank rank = rankService.findById(id);
         return new ResponseEntity<>(rankMapper.toDTO(rank), HttpStatus.OK);
     }
 
     @GetMapping("/{name}")
+    @PreAuthorize("hasAuthority('CAN_SEE_RANK')")
     public ResponseEntity<RankDTO> retrieveByName(@PathVariable String name) {
         Rank rank = rankService.loadRankByName(name);
         return new ResponseEntity<>(rankMapper.toDTO(rank), HttpStatus.OK);
     }
 
     @GetMapping({"", "/"})
+    @PreAuthorize("hasAuthority('CAN_SEE_RANK')")
     public ResponseEntity <List<RankDTO>> retrieveAll() {
         List<Rank> ranks = rankService.findAll();
         return new ResponseEntity<>(rankMapper.toDTOs(ranks), HttpStatus.OK);

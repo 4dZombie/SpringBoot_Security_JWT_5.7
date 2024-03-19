@@ -26,7 +26,7 @@ public class UserServiceImpl extends ExtendedServiceImpl<User> implements UserSe
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    private final static String initialRole = "CLIENT";
+    private final static String initialRole = "ADMIN";
 //  private final static String initalRank = "DEV";
 
     private final RoleService roleService;

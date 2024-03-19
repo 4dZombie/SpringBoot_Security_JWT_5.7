@@ -2,8 +2,10 @@ package com.example.jwt.domain.calendar.dto;
 
 import com.example.jwt.core.generic.ExtendedDTO;
 import com.example.jwt.domain.calendar.CalendarStatus;
+import com.example.jwt.domain.user.dto.UserDTO;
 
 import java.time.LocalDate;
+import java.util.Set;
 import java.util.UUID;
 
 public class CalendarDTO extends ExtendedDTO {
@@ -12,7 +14,6 @@ public class CalendarDTO extends ExtendedDTO {
     private LocalDate endDate;
     private CalendarStatus status;
     private LocalDate createdAt;
-
     private UUID userId;
 
     public CalendarDTO() {

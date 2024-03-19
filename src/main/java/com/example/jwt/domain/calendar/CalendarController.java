@@ -38,7 +38,7 @@ public class CalendarController {
     }
 
     @GetMapping({"", "/"})
-    @PreAuthorize("hasAuthority('CAN_PLACE_ENTRY')")
+    @PreAuthorize("hasAuthority('CAN_SEE_ALL_ENTRIES')")
     public ResponseEntity<List<CalendarDTO>> retrieveAll() {
         List<Calendar> calendars = calendarService.findAll();
         return new ResponseEntity<>(calendarMapper.toDTOs(calendars), HttpStatus.OK);
@@ -46,7 +46,7 @@ public class CalendarController {
 
 
     @PostMapping(value = "/entry", consumes = "application/json")
-    @PreAuthorize("hasAuthority('CAN_PLACE_ENTRY')")
+    @PreAuthorize("hasAuthority('CAN_CREATE_ENTRY')")
     public ResponseEntity<CalendarDTO> entry(@Valid @RequestBody CalendarDTO calendarDTO, Authentication authentication) {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         User user = userRepository.findById(userDetails.getUser().getId())
@@ -63,7 +63,7 @@ public class CalendarController {
 
 
     @GetMapping("/user/{userId}/calendars")
-    @PreAuthorize("hasAuthority('CAN_PLACE_ENTRY')")
+    @PreAuthorize("hasAuthority('CAN_SEE_ENTRY')")
     public ResponseEntity<List<CalendarDTO>> retrieveCalendarsByUserId(@PathVariable UUID userId) {
         List<Calendar> calendars = userService.getAllCalendarsByUserId(userId);
         List<CalendarDTO> calendarDTOs = calendarMapper.toDTOs(calendars);
@@ -71,7 +71,7 @@ public class CalendarController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('CAN_PLACE_ENTRY')")
+    @PreAuthorize("hasAuthority('CAN_MODIFY_ENTRY')")
     public ResponseEntity<CalendarDTO> updateById(@PathVariable UUID id,
                                                   @Valid @RequestBody CalendarDTO calendarDTO) {
         Calendar calendar = calendarService.updateById(id, calendarMapper.fromCalendarDTO(calendarDTO));
@@ -79,7 +79,7 @@ public class CalendarController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('CAN_PLACE_ENTRY')")
+    @PreAuthorize("hasAuthority('CAN_DELETE_ENTRY')")
     public ResponseEntity<Void> deleteById(@PathVariable UUID id) {
         calendarService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -87,7 +87,7 @@ public class CalendarController {
 
     //put mapping for changing status of calendar entry
     @PutMapping("/{id}/status")
-    @PreAuthorize("hasAuthority('CAN_PLACE_ENTRY')")
+    @PreAuthorize("hasAuthority('CAN_MODIFY_ENTRY_STATUS')")
     public ResponseEntity<CalendarDTO> updateStatusById(@PathVariable UUID id, @Valid @RequestBody CalendarDTO calendarDTO) {
         Calendar calendar = calendarService.updateStatusById(id, calendarDTO.getStatus());
         return new ResponseEntity<>(calendarMapper.toDTO(calendar), HttpStatus.OK);
@@ -95,7 +95,7 @@ public class CalendarController {
 
     //get mapping for getting overlapping entries
     @GetMapping("/overlapping")
-    //@PreAuthorize("hasAuthority('CAN_PLACE_ENTRY')")
+    @PreAuthorize("hasAuthority('CAN_SEE_ALL_ENTRIES')")
     public ResponseEntity<List<CalendarDTO>> getOverlappingEntries() {
         List<Calendar> calendars = calendarService.getOverlappingEntriesQuery();
         return new ResponseEntity<>(calendarMapper.toDTOs(calendars), HttpStatus.OK);
