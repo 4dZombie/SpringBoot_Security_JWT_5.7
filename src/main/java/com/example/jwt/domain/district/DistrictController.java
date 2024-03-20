@@ -6,6 +6,7 @@ import com.example.jwt.domain.district.DTO.DistrictMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,18 +30,21 @@ public class DistrictController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('CAN_SEE_DISTRICT')")
     public ResponseEntity<DistrictDTO> retrieveById(@PathVariable UUID id) {
         District district = districtService.findById(id);
         return new ResponseEntity<>(districtMapper.toDTO(district), HttpStatus.OK);
     }
 
     @GetMapping("/{plz}")
+    @PreAuthorize("hasAuthority('CAN_SEE_DISTRICT')")
     public ResponseEntity<DistrictDTO> retrieveByPlz(@PathVariable int plz) {
         District district = districtService.loadDistrictByPlz(plz);
         return new ResponseEntity<>(districtMapper.toDTO(district), HttpStatus.OK);
     }
 
     @GetMapping({"", "/"})
+    @PreAuthorize("hasAuthority('CAN_SEE_DISTRICT')")
     public ResponseEntity<List<DistrictDTO>> retrieveAll() {
         List<District> districts = districtService.findAll();
         return new ResponseEntity<>(districtMapper.toDTOs(districts), HttpStatus.OK);

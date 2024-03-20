@@ -38,12 +38,14 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('CAN_SEE_USER')")
     public ResponseEntity<UserDTO> retrieveById(@PathVariable UUID id) {
         User user = userService.findById(id);
         return new ResponseEntity<>(userMapper.toDTO(user), HttpStatus.OK);
     }
 
     @GetMapping({"", "/"})
+    @PreAuthorize("hasAuthority('CAN_SEE_ALL_USERS')")
     public ResponseEntity<List<UserDTO>> retrieveAll() {
         List<User> users = userService.findAll();
         return new ResponseEntity<>(userMapper.toDTOs(users), HttpStatus.OK);
@@ -56,7 +58,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('USER_MODIFY') && @userPermissionEvaluator.isUserAboveAge(authentication.principal.user,18)")
+    @PreAuthorize("hasAuthority('CAN_MODIFY_USER')")
     public ResponseEntity<UserDTO> updateById(@PathVariable UUID id,
                                               @Valid @RequestBody UserDTO userDTO) {
         User user = userService.updateById(id, userMapper.fromDTO(userDTO));
@@ -64,14 +66,14 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('USER_DELETE')")
+    @PreAuthorize("hasAuthority('CAN_DELETE_USER')")
     public ResponseEntity<Void> deleteById(@PathVariable UUID id) {
         userService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PutMapping("/{userId}/deputy")
-    //@PreAuthorize("hasAuthority('DEPUTY_ASSIGN')")
+    @PreAuthorize("hasAuthority('CAN_MODIFY_USER')")
     public ResponseEntity<UserDTO> assignDeputy(@PathVariable UUID userId, @Valid @RequestBody DeputyAssignmentDTO deputyAssignmentDTO) {
         User updatedUser = userService.setDeputy(userId, deputyAssignmentDTO.getDeputyId());
         return new ResponseEntity<>(userMapper.toDTO(updatedUser), HttpStatus.OK);
