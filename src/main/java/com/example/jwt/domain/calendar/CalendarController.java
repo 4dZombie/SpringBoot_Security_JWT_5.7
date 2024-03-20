@@ -93,14 +93,14 @@ public class CalendarController {
 
     //get mapping for getting overlapping entries
     @GetMapping("/overlapping")
-    @PreAuthorize("hasAuthority('CAN_SEE_ALL_ENTRIES')")
+    @PreAuthorize("hasAuthority('CAN_MODIFY_ENTRY_STATUS')")
     public ResponseEntity<List<CalendarDTO>> getOverlappingEntries() {
         List<Calendar> calendars = calendarService.getOverlappingEntriesQuery();
         return new ResponseEntity<>(calendarMapper.toDTOs(calendars), HttpStatus.OK);
     }
 
     @GetMapping("/overlapping/rank")
-    //@PreAuthorize("hasAuthority('CAN_PLACE_ENTRY')")
+    @PreAuthorize("hasAuthority('CAN_MODIFY_ENTRY_STATUS')")
     public ResponseEntity<List<CalendarDTO>> getEntriesWithOverlappingRanks() {
         List<Calendar> calendarsWithMatchingRanks = calendarService.getOverlappingRanks();
         List<CalendarDTO> calendarDTOs = calendarMapper.toDTOs(calendarsWithMatchingRanks);
@@ -108,10 +108,18 @@ public class CalendarController {
     }
 
     @GetMapping("/overlapping/deputy")
-    //@PreAuthorize("hasAuthority('CAN_PLACE_ENTRY')")
+    @PreAuthorize("hasAuthority('CAN_MODIFY_ENTRY_STATUS')")
     public ResponseEntity<List<CalendarDTO>> getEntriesWithOverlappingDeputies() {
         List<Calendar> calendarsWithMatchingDeputies = calendarService.getOverlappingDeputies();
         List<CalendarDTO> calendarDTOs = calendarMapper.toDTOs(calendarsWithMatchingDeputies);
+        return new ResponseEntity<>(calendarDTOs, HttpStatus.OK);
+    }
+    
+    @GetMapping("/overlapping/status")
+    @PreAuthorize("hasAuthority('CAN_MODIFY_ENTRY_STATUS')")
+    public ResponseEntity<List<CalendarDTO>> getEntriesWithOverlappingStatus() {
+        List<Calendar> calendarsWithMatchingStatus = calendarService.compareOverlappingEntiresWithAllEntries();
+        List<CalendarDTO> calendarDTOs = calendarMapper.toDTOs(calendarsWithMatchingStatus);
         return new ResponseEntity<>(calendarDTOs, HttpStatus.OK);
     }
 }

@@ -42,4 +42,5 @@ public interface CalendarRepository extends ExtendedRepository<Calendar> {
 
     @Query("SELECT c1.createdAt, c2.createdAt FROM Calendar c1, Calendar c2 WHERE c1.id <> c2.id AND c1.createdAt = c2.createdAt")
     List<LocalDateTime> findCreatedAt();
+
 }

@@ -75,6 +75,12 @@ public class UserServiceImpl extends ExtendedServiceImpl<User> implements UserSe
         return save(user);
     }
 
+    public User setRole(UUID userId, String roleName) {
+        User user = getUserById(userId);
+        Role role = roleService.loadRoleByName(roleName);
+        user.setRoles(new HashSet<>(Collections.singletonList(role)));
+        return save(user);
+    }
 
     private Priority createPriorityBasedOnRank(User user) {
         Priority priority = new Priority();

@@ -48,39 +48,40 @@ INSERT INTO role (id, name)
 VALUES ('724b5da7-7e6b-4a68-90d0-41d7136ed34e', 'CLIENT');
 INSERT INTO role (id, name)
 VALUES ('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', 'ADMIN');
--- ADMIN
--- CLIENT
-INSERT INTO role_authority (role_id, authority_id) VALUES
-('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', '4c5a83c3-284c-412a-afaf-e5a4afae7d37'),
-('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', '52aa615d-5d39-4875-95d1-ec7ecc3e33f2'),
-('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', 'eb65511d-294b-4e82-bc7a-c7ad8ffc353c'),
-('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', '2890b6d4-6fe8-4b5c-bc32-3c070a979032'),
-('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', 'e7fc29c7-c2fc-4c07-9635-bf834e0460f0'),
-('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', 'e99eaa75-45eb-4a3a-a38a-4bea55c83790'),
-('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', '5d407ea0-ae13-4018-a41f-806a0b32da10'),
-('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', '81ae9d48-5e1d-44d4-8122-c0916e04e8fb'),
-('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', '71aa249c-1956-44e7-a8f4-be676b2669ce'),
-('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', '7ba7693a-69c8-4611-b810-919f170cf54c'),
-('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', '7792c525-d479-4e0f-83eb-1029dc3cdb29'),
-('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', '9b515bd6-7f9e-4698-af49-c3b762854107'),
-('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', '6f723632-3702-42da-a420-6c8d5dac91a3'),
-('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', 'a368d68e-08bb-4067-b5b6-60364b35e4e3'),
-('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', 'b611906b-b7bb-472b-ae22-8e24add234fa'),
-('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', 'e2f05bd7-5150-4bab-8e1b-f98ce985ac67'),
-('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', '14b5d6f8-4948-451d-be7c-be342db1812f');
 
-INSERT INTO role_authority (role_id, authority_id) VALUES
-('724b5da7-7e6b-4a68-90d0-41d7136ed34e', '4c5a83c3-284c-412a-afaf-e5a4afae7d37'),
-('724b5da7-7e6b-4a68-90d0-41d7136ed34e', 'eb65511d-294b-4e82-bc7a-c7ad8ffc353c'),
-('724b5da7-7e6b-4a68-90d0-41d7136ed34e', '2890b6d4-6fe8-4b5c-bc32-3c070a979032'),
-('724b5da7-7e6b-4a68-90d0-41d7136ed34e', 'e7fc29c7-c2fc-4c07-9635-bf834e0460f0'),
-('724b5da7-7e6b-4a68-90d0-41d7136ed34e', 'e99eaa75-45eb-4a3a-a38a-4bea55c83790'),
-('724b5da7-7e6b-4a68-90d0-41d7136ed34e', '5d407ea0-ae13-4018-a41f-806a0b32da10'),
-('724b5da7-7e6b-4a68-90d0-41d7136ed34e', '81ae9d48-5e1d-44d4-8122-c0916e04e8fb'),
-('724b5da7-7e6b-4a68-90d0-41d7136ed34e', '7ba7693a-69c8-4611-b810-919f170cf54c'),
-('724b5da7-7e6b-4a68-90d0-41d7136ed34e', '7792c525-d479-4e0f-83eb-1029dc3cdb29'),
-('724b5da7-7e6b-4a68-90d0-41d7136ed34e', '6f723632-3702-42da-a420-6c8d5dac91a3'),
-('724b5da7-7e6b-4a68-90d0-41d7136ed34e', 'e2f05bd7-5150-4bab-8e1b-f98ce985ac67');
+-- ADMIN
+INSERT INTO role_authority (role_id, authority_id)
+VALUES ('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', '4c5a83c3-284c-412a-afaf-e5a4afae7d37'),
+       ('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', '52aa615d-5d39-4875-95d1-ec7ecc3e33f2'),
+       ('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', 'eb65511d-294b-4e82-bc7a-c7ad8ffc353c'),
+       ('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', '2890b6d4-6fe8-4b5c-bc32-3c070a979032'),
+       ('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', 'e7fc29c7-c2fc-4c07-9635-bf834e0460f0'),
+       ('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', 'e99eaa75-45eb-4a3a-a38a-4bea55c83790'),
+       ('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', '5d407ea0-ae13-4018-a41f-806a0b32da10'),
+       ('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', '81ae9d48-5e1d-44d4-8122-c0916e04e8fb'),
+       ('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', '71aa249c-1956-44e7-a8f4-be676b2669ce'),
+       ('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', '7ba7693a-69c8-4611-b810-919f170cf54c'),
+       ('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', '7792c525-d479-4e0f-83eb-1029dc3cdb29'),
+       ('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', '9b515bd6-7f9e-4698-af49-c3b762854107'),
+       ('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', '6f723632-3702-42da-a420-6c8d5dac91a3'),
+       ('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', 'a368d68e-08bb-4067-b5b6-60364b35e4e3'),
+       ('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', 'b611906b-b7bb-472b-ae22-8e24add234fa'),
+       ('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', 'e2f05bd7-5150-4bab-8e1b-f98ce985ac67'),
+       ('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', '14b5d6f8-4948-451d-be7c-be342db1812f');
+
+-- CLIENT
+INSERT INTO role_authority (role_id, authority_id)
+VALUES ('724b5da7-7e6b-4a68-90d0-41d7136ed34e', '4c5a83c3-284c-412a-afaf-e5a4afae7d37'), -- modify user
+       ('724b5da7-7e6b-4a68-90d0-41d7136ed34e', 'eb65511d-294b-4e82-bc7a-c7ad8ffc353c'), -- modify role
+       ('724b5da7-7e6b-4a68-90d0-41d7136ed34e', '2890b6d4-6fe8-4b5c-bc32-3c070a979032'), -- create entry
+       ('724b5da7-7e6b-4a68-90d0-41d7136ed34e', 'e7fc29c7-c2fc-4c07-9635-bf834e0460f0'), --modify entry
+       ('724b5da7-7e6b-4a68-90d0-41d7136ed34e', 'e99eaa75-45eb-4a3a-a38a-4bea55c83790'), -- delete entry
+       ('724b5da7-7e6b-4a68-90d0-41d7136ed34e', '5d407ea0-ae13-4018-a41f-806a0b32da10'), -- see entry
+       ('724b5da7-7e6b-4a68-90d0-41d7136ed34e', '81ae9d48-5e1d-44d4-8122-c0916e04e8fb'), -- see user
+       ('724b5da7-7e6b-4a68-90d0-41d7136ed34e', '7ba7693a-69c8-4611-b810-919f170cf54c'), -- see district
+       ('724b5da7-7e6b-4a68-90d0-41d7136ed34e', '7792c525-d479-4e0f-83eb-1029dc3cdb29'), -- see rank
+       ('724b5da7-7e6b-4a68-90d0-41d7136ed34e', '6f723632-3702-42da-a420-6c8d5dac91a3'), -- see all entries
+       ('724b5da7-7e6b-4a68-90d0-41d7136ed34e', 'e2f05bd7-5150-4bab-8e1b-f98ce985ac67'); --  modify status
 
 INSERT INTO districts (id, name, plz)
 VALUES ('a9a29b19-92ff-4d1d-83a0-c211f97e4e41', 'Aarau', 5000);

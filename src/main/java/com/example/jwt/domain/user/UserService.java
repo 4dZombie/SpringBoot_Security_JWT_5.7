@@ -17,4 +17,6 @@ public interface UserService extends UserDetailsService, ExtendedService<User> {
 
     User setDeputy(UUID userId, UUID deputyId);
 
+    User setRole(UUID userId, String roleName);
+
 }

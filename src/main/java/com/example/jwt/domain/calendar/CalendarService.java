@@ -40,4 +40,6 @@ public interface CalendarService extends ExtendedService<Calendar> {
     //List<Calendar> getOverlappingPrioritys();
 
     //List<LocalDateTime> getCreatedAtQuery();
+
+    List<Calendar> compareOverlappingEntiresWithAllEntries();
 }

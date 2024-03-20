@@ -1,9 +1,8 @@
 package com.example.jwt.domain.user;
 
-import com.example.jwt.domain.user.dto.DeputyAssignmentDTO;
-import com.example.jwt.domain.user.dto.UserDTO;
-import com.example.jwt.domain.user.dto.UserMapper;
-import com.example.jwt.domain.user.dto.UserRegisterDTO;
+import com.example.jwt.domain.calendar.Calendar;
+import com.example.jwt.domain.calendar.dto.CalendarDTO;
+import com.example.jwt.domain.user.dto.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -78,5 +77,13 @@ public class UserController {
         User updatedUser = userService.setDeputy(userId, deputyAssignmentDTO.getDeputyId());
         return new ResponseEntity<>(userMapper.toDTO(updatedUser), HttpStatus.OK);
     }
+
+    @PutMapping("/{id}/role")
+    @PreAuthorize("hasAuthority('CAN_MODIFY_ROLE')")
+    public ResponseEntity<UserDTO> assignRole(@PathVariable UUID id, @Valid @RequestBody UserRoleDTO roleNameDTO) {
+        User updatedUser = userService.setRole(id, roleNameDTO.getName());
+        return new ResponseEntity<>(userMapper.toDTO(updatedUser), HttpStatus.OK);
+    }
+
 
 }
