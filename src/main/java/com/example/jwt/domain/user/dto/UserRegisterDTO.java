@@ -15,6 +15,10 @@ public class UserRegisterDTO extends ExtendedDTO {
 
     @NotNull
     @Size(min = 1, max = 50)
+    private String company;
+
+    @NotNull
+    @Size(min = 1, max = 50)
     private String firstName;
     @NotNull
     @Size(min = 1, max = 50)
@@ -25,7 +29,7 @@ public class UserRegisterDTO extends ExtendedDTO {
     private String email;
 
     @NotNull
-    @Size(min = 1, max = 50)
+    @Size(min = 4, max = 50)
     private String password;
 
     @NotNull
@@ -55,8 +59,9 @@ public class UserRegisterDTO extends ExtendedDTO {
     public UserRegisterDTO() {
     }
 
-    public UserRegisterDTO(UUID id, String firstName, String lastName, String email, String password, String street, Date birthdate, Date yearsOfEmployment, DistrictDTO district, PriorityDTO priority, RankDTO rank, Boolean kids, Boolean student, int employment) {
+    public UserRegisterDTO(UUID id, String company, String firstName, String lastName, String email, String password, String street, Date birthdate, Date yearsOfEmployment, DistrictDTO district, PriorityDTO priority, RankDTO rank, Boolean kids, Boolean student, int employment) {
         super(id);
+        this.company = company;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -70,6 +75,15 @@ public class UserRegisterDTO extends ExtendedDTO {
         this.kids = kids;
         this.student = student;
         this.employment = employment;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public UserRegisterDTO setCompany(String company) {
+        this.company = company;
+        return this;
     }
 
     public String getFirstName() {

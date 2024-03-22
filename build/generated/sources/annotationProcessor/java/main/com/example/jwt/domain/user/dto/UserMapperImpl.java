@@ -31,7 +31,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-03-20T11:34:05+0100",
+    date = "2024-03-22T15:24:34+0100",
     comments = "version: 1.5.5.Final, compiler: IncrementalProcessingEnvironment from gradle-language-java-7.5.jar, environment: Java 17.0.9 (Eclipse Adoptium)"
 )
 @Component
@@ -57,6 +57,7 @@ public class UserMapperImpl implements UserMapper {
         User user = new User();
 
         user.setId( dto.getId() );
+        user.setCompany( dto.getCompany() );
         user.setFirstName( dto.getFirstName() );
         user.setLastName( dto.getLastName() );
         user.setEmail( dto.getEmail() );
@@ -142,6 +143,7 @@ public class UserMapperImpl implements UserMapper {
         User user = new User();
 
         user.setId( dto.getId() );
+        user.setCompany( dto.getCompany() );
         user.setFirstName( dto.getFirstName() );
         user.setLastName( dto.getLastName() );
         user.setEmail( dto.getEmail() );
@@ -172,6 +174,7 @@ public class UserMapperImpl implements UserMapper {
         UserDTO userDTO = new UserDTO();
 
         userDTO.setId( entity.getId() );
+        userDTO.setCompany( entity.getCompany() );
         userDTO.setFirstName( entity.getFirstName() );
         userDTO.setLastName( entity.getLastName() );
         userDTO.setEmail( entity.getEmail() );
@@ -291,6 +294,7 @@ public class UserMapperImpl implements UserMapper {
         calendar.setStartDate( calendarDTO.getStartDate() );
         calendar.setEndDate( calendarDTO.getEndDate() );
         calendar.setStatus( calendarDTO.getStatus() );
+        calendar.setDeputyUser( calendarDTO.getDeputyUser() );
 
         return calendar;
     }
@@ -535,6 +539,7 @@ public class UserMapperImpl implements UserMapper {
         calendarDTO.setEndDate( calendar.getEndDate() );
         calendarDTO.setStatus( calendar.getStatus() );
         calendarDTO.setCreatedAt( xmlGregorianCalendarToLocalDate( localDateTimeToXmlGregorianCalendar( calendar.getCreatedAt() ) ) );
+        calendarDTO.setDeputyUser( calendar.getDeputyUser() );
 
         return calendarDTO;
     }

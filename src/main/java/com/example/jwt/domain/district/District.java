@@ -2,6 +2,9 @@ package com.example.jwt.domain.district;
 
 import com.example.jwt.core.generic.ExtendedEntity;
 import com.example.jwt.domain.user.User;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,6 +25,7 @@ public class District extends ExtendedEntity {
     private int plz;
 
     @OneToMany(mappedBy = "district")
+    //@JsonManagedReference
     private Set<User> users;
 
     public String getName() {

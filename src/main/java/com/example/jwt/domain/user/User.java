@@ -6,6 +6,9 @@ import com.example.jwt.domain.calendar.Calendar;
 import com.example.jwt.domain.district.District;
 import com.example.jwt.domain.priority.Priority;
 import com.example.jwt.domain.role.Role;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -16,7 +19,8 @@ import javax.persistence.*;
 @Entity
 @Table(name = "users")
 public class User extends ExtendedAuditEntity {
-
+    @Column(name = "company")
+    private String company;
     @Column(name = "first_name")
     private String firstName;
     @Column(name = "last_name")
@@ -54,6 +58,7 @@ public class User extends ExtendedAuditEntity {
     private Set<Calendar> calendars = new HashSet<>();
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "district_id", nullable = false)
+    //@JsonManagedReference
     private District district;
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "rank_id", nullable = false)
@@ -75,8 +80,9 @@ public class User extends ExtendedAuditEntity {
     public User() {
     }
 
-    public User(UUID id, String firstName, String lastName, String email, String password, LocalDate birthdate, LocalDate yearsOfEmployment, int employment, Boolean kids, Boolean student, String street, int age, double holiday, Set<Calendar> calendars, District district, Rank rank, User deputy, Priority priority, Set<Role> roles) {
+    public User(UUID id, String company, String firstName, String lastName, String email, String password, LocalDate birthdate, LocalDate yearsOfEmployment, int employment, Boolean kids, Boolean student, String street, int age, double holiday, Set<Calendar> calendars, District district, Rank rank, User deputy, Priority priority, Set<Role> roles) {
         super(id);
+        this.company = company;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -97,6 +103,15 @@ public class User extends ExtendedAuditEntity {
         this.roles = roles;
     }
 
+
+    public String getCompany() {
+        return company;
+    }
+
+    public User setCompany(String company) {
+        this.company = company;
+        return this;
+    }
     public String getFirstName() {
         return firstName;
     }
