@@ -14,7 +14,7 @@ import java.util.concurrent.CompletableFuture;
 public class Calendar extends ExtendedAuditEntity {
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "user_id")
-private User user;
+    private User user;
     @Column(name = "title")
     private String title;
     @Column(name = "startDate")
@@ -23,6 +23,7 @@ private User user;
     private LocalDate endDate;
     @Enumerated(EnumType.STRING)
     private CalendarStatus status;
+
 
     public Calendar(UUID id, String title, LocalDate startDate, LocalDate endDate, CalendarStatus status, User user) {
         super(id);

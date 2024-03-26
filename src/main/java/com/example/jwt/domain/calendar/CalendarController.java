@@ -55,6 +55,7 @@ public class CalendarController {
         userService.save(user);
         CalendarDTO responseDTO = calendarMapper.toDTO(calendar);
         responseDTO.setUserId(user.getId());
+        responseDTO.setPriorityPoints(user.getPriority().getPoints());
 
         return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
     }

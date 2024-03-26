@@ -82,7 +82,7 @@ public class UserServiceImpl extends ExtendedServiceImpl<User> implements UserSe
         return save(user);
     }
 
-    private Priority createPriorityBasedOnRank(User user) {
+    public Priority createPriorityBasedOnRank(User user) {
         Priority priority = new Priority();
         priority.setUser(user);
 

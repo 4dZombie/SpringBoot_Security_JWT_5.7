@@ -180,7 +180,8 @@ public class CalendarServiceImpl extends ExtendedServiceImpl<Calendar> implement
                         entry1.setStatus(CalendarStatus.VORLAEUFIG_ABGELEHNT);
                         entry2.setStatus(CalendarStatus.VORLAEUFIG_ABGELEHNT);
                     } else {
-                        entry1.setStatus(CalendarStatus.IN_BEARBEITUNG);
+                        //entry1.setStatus(CalendarStatus.IN_BEARBEITUNG);
+                        entry1.setStatus(CalendarStatus.VORLAEUFIG_ABGELEHNT);
                     }
                 }
             }

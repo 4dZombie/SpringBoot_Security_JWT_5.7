@@ -78,10 +78,10 @@ public class UserController {
         return new ResponseEntity<>(userMapper.toDTO(updatedUser), HttpStatus.OK);
     }
 
-    @PutMapping("/{id}/role")
+    @PutMapping("/{userId}/role")
     @PreAuthorize("hasAuthority('CAN_MODIFY_ROLE')")
-    public ResponseEntity<UserDTO> assignRole(@PathVariable UUID id, @Valid @RequestBody UserRoleDTO roleNameDTO) {
-        User updatedUser = userService.setRole(id, roleNameDTO.getName());
+    public ResponseEntity<UserDTO> assignRole(@PathVariable UUID userId, @Valid @RequestBody UserRoleDTO roleNameDTO) {
+        User updatedUser = userService.setRole(userId, roleNameDTO.getName());
         return new ResponseEntity<>(userMapper.toDTO(updatedUser), HttpStatus.OK);
     }
 
