@@ -6,9 +6,7 @@ import com.example.jwt.domain.calendar.Calendar;
 import com.example.jwt.domain.district.District;
 import com.example.jwt.domain.priority.Priority;
 import com.example.jwt.domain.role.Role;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 
 import java.time.LocalDate;
 import java.util.HashSet;

@@ -1,7 +1,5 @@
 package com.example.jwt.domain.user;
 
-import com.example.jwt.domain.calendar.Calendar;
-import com.example.jwt.domain.calendar.dto.CalendarDTO;
 import com.example.jwt.domain.user.dto.*;
 
 import java.util.List;

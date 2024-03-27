@@ -2,11 +2,6 @@ package com.example.jwt.domain.calendar.dto;
 
 import com.example.jwt.core.generic.ExtendedMapper;
 import com.example.jwt.domain.calendar.Calendar;
-import com.example.jwt.domain.calendar.CalendarStatus;
-import com.example.jwt.domain.priority.Priority;
-import com.example.jwt.domain.user.User;
-import com.example.jwt.domain.user.UserService;
-import com.example.jwt.domain.user.UserServiceImpl;
 import org.mapstruct.*;
 
 import java.util.List;

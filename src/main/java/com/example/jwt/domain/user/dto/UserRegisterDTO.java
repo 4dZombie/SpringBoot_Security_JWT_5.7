@@ -6,7 +6,6 @@ import com.example.jwt.domain.district.DTO.DistrictDTO;
 import com.example.jwt.domain.priority.DTO.PriorityDTO;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.UUID;
 import javax.validation.constraints.*;

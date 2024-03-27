@@ -1,7 +1,5 @@
 package com.example.jwt.domain.role;
 
-import com.example.jwt.domain.Rank.DTO.RankDTO;
-import com.example.jwt.domain.Rank.Rank;
 import com.example.jwt.domain.role.dto.RoleDTO;
 import com.example.jwt.domain.role.dto.RoleMapper;
 import org.springframework.beans.factory.annotation.Autowired;

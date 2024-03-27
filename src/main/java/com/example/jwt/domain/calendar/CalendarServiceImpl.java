@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -143,27 +144,137 @@ public class CalendarServiceImpl extends ExtendedServiceImpl<Calendar> implement
         return entriesWithDeputyConflicts;
     }
 
+
 //    public List<Calendar> compareOverlappingEntiresWithAllEntries() {
-//        //List<Calendar> overlappingEntries = getOverlappingEntriesQuery();
-//        List<Calendar> overlappingEntries = getOverlappingDeputies();
 //        List<Calendar> allEntries = findAll();
-//        Set<UUID> overlappingEntryIds = overlappingEntries.stream().map(Calendar::getId).collect(Collectors.toSet());
+//        Map<UUID, Calendar> entriesById = allEntries.stream().collect(Collectors.toMap(Calendar::getId, entry -> entry));
+//        List<Calendar> overlappingEntries = getOverlappingEntriesQuery();
 //
-//        for (Calendar entry : allEntries) {
-//            if (overlappingEntryIds.contains(entry.getId())) {
-//                entry.setStatus(CalendarStatus.VORLAEUFIG_ABGELEHNT);
-//            } else {
-//                entry.setStatus(CalendarStatus.VORLAEUFIG_AKZEPTIERT);
+//        allEntries.forEach(entry -> entry.setStatus(CalendarStatus.VORLAEUFIG_AKZEPTIERT));
+//
+//        for (Calendar overlap : overlappingEntries) {
+//            Calendar entry1 = entriesById.get(overlap.getId());
+//            for (Calendar entry2 : allEntries) {
+//                if (!entry1.equals(entry2) && doDatesOverlap(entry1, entry2)) {
+//                    boolean sameRank = entry1.getUser().getRank().equals(entry2.getUser().getRank());
+//                    boolean isDeputyOverlap = entry1.getUser().getDeputy() != null && entry1.getUser().getDeputy().equals(entry2.getUser());
+//
+//                    if (sameRank && isDeputyOverlap) {
+//
+//                        entry1.setStatus(CalendarStatus.VORLAEUFIG_ABGELEHNT);
+//                        entry2.setStatus(CalendarStatus.VORLAEUFIG_ABGELEHNT);
+//                    } else {
+//                        //entry1.setStatus(CalendarStatus.IN_BEARBEITUNG);
+//                        entry1.setStatus(CalendarStatus.VORLAEUFIG_ABGELEHNT);
+//                    }
+//                }
 //            }
-//            save(entry);
 //        }
+//
+//        // Save the updated statuses
+//        allEntries.forEach(this::save);
 //        return allEntries;
 //    }
 
-    //From GPT to help me out and test
+    //TODO: Test service
+    //above is a copy of the original one if the changes made fail
+    //KEINE_STELLVERTRETUNG status is not set currently
+//    public List<Calendar> compareOverlappingEntiresWithAllEntries() {
+//        List<Calendar> allEntries = findAll();
+//        Map<UUID, Calendar> entriesById = allEntries.stream()
+//                .collect(Collectors.toMap(Calendar::getId, Function.identity()));
+//        List<Calendar> overlappingEntries = getOverlappingEntriesQuery();
+//
+//        allEntries.forEach(entry -> entry.setStatus(CalendarStatus.VORLAEUFIG_AKZEPTIERT));
+//
+//        for (Calendar overlap : overlappingEntries) {
+//            Calendar entry1 = entriesById.get(overlap.getId());
+//            for (Calendar entry2 : allEntries) {
+//                if (!entry1.equals(entry2) && doDatesOverlap(entry1, entry2)) {
+//                    boolean sameRank = entry1.getUser().getRank().equals(entry2.getUser().getRank());
+//                    boolean isDeputyOverlap = entry1.getUser().getDeputy() != null && entry1.getUser().getDeputy().equals(entry2.getUser());
+//                    boolean isReverseDeputyOverlap = entry2.getUser().getDeputy() != null && entry2.getUser().getDeputy().equals(entry1.getUser());
+//
+//                    if (sameRank || isDeputyOverlap || isReverseDeputyOverlap) {
+//                        entry1.setStatus(CalendarStatus.VORLAEUFIG_ABGELEHNT);
+//                        entry2.setStatus(CalendarStatus.VORLAEUFIG_ABGELEHNT);
+//                    } else {
+//                        entry1.setStatus(CalendarStatus.IN_BEARBEITUNG);
+//                        entry2.setStatus(CalendarStatus.IN_BEARBEITUNG);
+//                    }
+//                }
+//            }
+//        }
+//
+//        allEntries.forEach(this::save);
+//        return allEntries;
+//    }
+
+    /** Attempted Fix failed in all cases**/
+
+//    public List<Calendar> compareOverlappingEntiresWithAllEntries() {
+//        List<Calendar> allEntries = findAll();
+//
+//        // Set initial status based on non-overlapping rule
+//        allEntries.forEach(entry -> entry.setStatus(CalendarStatus.VORLAEUFIG_AKZEPTIERT));
+//
+//        for (int i = 0; i < allEntries.size(); i++) {
+//            Calendar entry1 = allEntries.get(i);
+//            for (int j = i + 1; j < allEntries.size(); j++) {
+//                Calendar entry2 = allEntries.get(j);
+//
+//                // Check for exact same dates first
+//                if (entry1.getStartDate().isEqual(entry2.getStartDate()) && entry1.getEndDate().isEqual(entry2.getEndDate())) {
+//                    handleExactSameDates(entry1, entry2);
+//                } else if (doDatesOverlap(entry1, entry2)) {
+//                    handleOverlappingDates(entry1, entry2);
+//                }
+//            }
+//        }
+//
+//        // Save the updated statuses
+//        allEntries.forEach(this::save);
+//        return allEntries;
+//    }
+//
+//    private void handleExactSameDates(Calendar entry1, Calendar entry2) {
+//        boolean differentRoles = !entry1.getUser().getRank().equals(entry2.getUser().getRank());
+//        boolean noDeputyOverlap = (entry1.getUser().getDeputy() == null || !entry1.getUser().getDeputy().equals(entry2.getUser())) &&
+//                (entry2.getUser().getDeputy() == null || !entry2.getUser().getDeputy().equals(entry1.getUser()));
+//
+//        if (differentRoles && noDeputyOverlap) {
+//            // Accept both entries if they have distinct roles and are not deputies of each other
+//            entry1.setStatus(CalendarStatus.VORLAEUFIG_AKZEPTIERT);
+//            entry2.setStatus(CalendarStatus.VORLAEUFIG_AKZEPTIERT);
+//        } else {
+//            // Decline both entries
+//            entry1.setStatus(CalendarStatus.VORLAEUFIG_ABGELEHNT);
+//            entry2.setStatus(CalendarStatus.VORLAEUFIG_ABGELEHNT);
+//        }
+//    }
+//
+//    private void handleOverlappingDates(Calendar entry1, Calendar entry2) {
+//        boolean sameRole = entry1.getUser().getRank().equals(entry2.getUser().getRank());
+//        boolean isDeputyOverlap = entry1.getUser().getDeputy() != null && entry1.getUser().getDeputy().equals(entry2.getUser());
+//        boolean isReverseDeputyOverlap = entry2.getUser().getDeputy() != null && entry2.getUser().getDeputy().equals(entry1.getUser());
+//
+//        if (sameRole || isDeputyOverlap || isReverseDeputyOverlap) {
+//            entry1.setStatus(CalendarStatus.VORLAEUFIG_ABGELEHNT);
+//            entry2.setStatus(CalendarStatus.VORLAEUFIG_ABGELEHNT);
+//        } else {
+//            // If roles are different and there's no deputy relationship, accept both entries
+//            entry1.setStatus(CalendarStatus.VORLAEUFIG_AKZEPTIERT);
+//            entry2.setStatus(CalendarStatus.VORLAEUFIG_AKZEPTIERT);
+//        }
+//    }
+
+
+    //TODO: Test service should now set a new status not yet tested
+    /** If test is successful delete above commented services those were tryouts and copys to test**/
     public List<Calendar> compareOverlappingEntiresWithAllEntries() {
         List<Calendar> allEntries = findAll();
-        Map<UUID, Calendar> entriesById = allEntries.stream().collect(Collectors.toMap(Calendar::getId, entry -> entry));
+        Map<UUID, Calendar> entriesById = allEntries.stream()
+                .collect(Collectors.toMap(Calendar::getId, Function.identity()));
         List<Calendar> overlappingEntries = getOverlappingEntriesQuery();
 
         allEntries.forEach(entry -> entry.setStatus(CalendarStatus.VORLAEUFIG_AKZEPTIERT));
@@ -174,23 +285,31 @@ public class CalendarServiceImpl extends ExtendedServiceImpl<Calendar> implement
                 if (!entry1.equals(entry2) && doDatesOverlap(entry1, entry2)) {
                     boolean sameRank = entry1.getUser().getRank().equals(entry2.getUser().getRank());
                     boolean isDeputyOverlap = entry1.getUser().getDeputy() != null && entry1.getUser().getDeputy().equals(entry2.getUser());
+                    boolean isReverseDeputyOverlap = entry2.getUser().getDeputy() != null && entry2.getUser().getDeputy().equals(entry1.getUser());
 
-                    if (sameRank && isDeputyOverlap) {
+                    // Check if neither user has a deputy selected
+                    boolean noDeputySelected = entry1.getUser().getDeputy() == null && entry2.getUser().getDeputy() == null;
 
+                    if (sameRank || isDeputyOverlap || isReverseDeputyOverlap) {
                         entry1.setStatus(CalendarStatus.VORLAEUFIG_ABGELEHNT);
                         entry2.setStatus(CalendarStatus.VORLAEUFIG_ABGELEHNT);
+                    } else if (noDeputySelected) {
+                        // If no deputy is selected for both entries, set status to KEINE_STELLVERTRETUNG
+                        entry1.setStatus(CalendarStatus.KEINE_STELLVERTRETUNG);
+                        entry2.setStatus(CalendarStatus.KEINE_STELLVERTRETUNG);
                     } else {
-                        //entry1.setStatus(CalendarStatus.IN_BEARBEITUNG);
-                        entry1.setStatus(CalendarStatus.VORLAEUFIG_ABGELEHNT);
+                        // This assumes that there's another condition or default behavior you want to apply
+                        entry1.setStatus(CalendarStatus.IN_BEARBEITUNG);
+                        entry2.setStatus(CalendarStatus.IN_BEARBEITUNG);
                     }
                 }
             }
         }
 
-        // Save the updated statuses
         allEntries.forEach(this::save);
         return allEntries;
     }
+
 
 
     @Override

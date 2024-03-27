@@ -117,11 +117,18 @@ public class CalendarController {
     }
     
     @GetMapping("/overlapping/status")
+    //need to change this authority only a admin should be able to do this
     @PreAuthorize("hasAuthority('CAN_MODIFY_ENTRY_STATUS')")
     public ResponseEntity<List<CalendarDTO>> getEntriesWithOverlappingStatus() {
         List<Calendar> calendarsWithMatchingStatus = calendarService.compareOverlappingEntiresWithAllEntries();
         List<CalendarDTO> calendarDTOs = calendarMapper.toDTOs(calendarsWithMatchingStatus);
         return new ResponseEntity<>(calendarDTOs, HttpStatus.OK);
     }
+
+    //create endpoint for accepting entrys + ServiceImpl
+    // Reminder Need to subtract holiday days from users after accepted entry
+    // if user does not have enough holidays put out error
+
+    //create endpoint for declining entrys + ServiceImpl
 }
 

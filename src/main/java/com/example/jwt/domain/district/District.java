@@ -2,16 +2,12 @@ package com.example.jwt.domain.district;
 
 import com.example.jwt.core.generic.ExtendedEntity;
 import com.example.jwt.domain.user.User;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.Set;
-import java.util.UUID;
 
 
 @Entity

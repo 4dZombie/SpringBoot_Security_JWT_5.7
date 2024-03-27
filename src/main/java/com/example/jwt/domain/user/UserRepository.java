@@ -2,7 +2,6 @@ package com.example.jwt.domain.user;
 
 import com.example.jwt.core.generic.ExtendedRepository;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 

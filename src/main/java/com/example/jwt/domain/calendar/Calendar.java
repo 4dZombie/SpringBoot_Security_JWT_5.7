@@ -2,12 +2,10 @@ package com.example.jwt.domain.calendar;
 
 import com.example.jwt.core.generic.ExtendedAuditEntity;
 import com.example.jwt.domain.user.User;
-import org.springframework.scheduling.annotation.Async;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 
 @Entity
 @Table(name = "calendar")

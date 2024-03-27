@@ -2,7 +2,6 @@ package com.example.jwt.domain.user;
 
 import com.example.jwt.core.generic.ExtendedService;
 import com.example.jwt.domain.calendar.Calendar;
-import com.example.jwt.domain.priority.Priority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
