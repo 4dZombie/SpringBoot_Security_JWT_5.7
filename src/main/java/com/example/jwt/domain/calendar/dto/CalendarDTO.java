@@ -1,6 +1,7 @@
 package com.example.jwt.domain.calendar.dto;
 
 import com.example.jwt.core.generic.ExtendedDTO;
+import com.example.jwt.domain.calendar.CalendarStatus;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -9,15 +10,26 @@ public class CalendarDTO extends ExtendedDTO {
     private String title;
     private LocalDate startDate;
     private LocalDate endDate;
+    private CalendarStatus status;
 
     public CalendarDTO() {
     }
 
-    public CalendarDTO(UUID id,String title, LocalDate startDate, LocalDate endDate) {
+    public CalendarDTO(UUID id, String title, LocalDate startDate, LocalDate endDate, CalendarStatus status) {
         super(id);
         this.title = title;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.status = status;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public CalendarDTO setTitle(String title) {
+        this.title = title;
+        return this;
     }
 
     public LocalDate getStartDate() {
@@ -38,13 +50,12 @@ public class CalendarDTO extends ExtendedDTO {
         return this;
     }
 
-    public String getTitle() {
-        return title;
+    public CalendarStatus getStatus() {
+        return status;
     }
 
-    public CalendarDTO setTitle(String title) {
-        this.title = title;
+    public CalendarDTO setStatus(CalendarStatus status) {
+        this.status = status;
         return this;
     }
-
 }

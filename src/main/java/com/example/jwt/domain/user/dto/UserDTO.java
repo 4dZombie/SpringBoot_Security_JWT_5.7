@@ -26,6 +26,7 @@ public class UserDTO extends ExtendedDTO {
     private boolean student;
     private double holiday;
     private LocalDate yearsOfEmployment;
+    private DeputyDTO deputy;
     private PriorityDTO priority;
     private DistrictDTO district;
     private RankDTO rank;
@@ -36,7 +37,7 @@ public class UserDTO extends ExtendedDTO {
     public UserDTO() {
     }
 
-    public UserDTO(UUID id, String firstName, String lastName, String email, int employment, int age, String street, boolean kids, boolean student, double holiday, LocalDate yearsOfEmployment, PriorityDTO priority, DistrictDTO district, RankDTO rank, Set<RoleDTO> roles, Set<CalendarDTO> calendars) {
+    public UserDTO(UUID id, String firstName, String lastName, String email, int employment, int age, String street, boolean kids, boolean student, double holiday, LocalDate yearsOfEmployment, DeputyDTO deputy, PriorityDTO priority, DistrictDTO district, RankDTO rank, Set<RoleDTO> roles, Set<CalendarDTO> calendars) {
         super(id);
         this.firstName = firstName;
         this.lastName = lastName;
@@ -48,20 +49,12 @@ public class UserDTO extends ExtendedDTO {
         this.student = student;
         this.holiday = holiday;
         this.yearsOfEmployment = yearsOfEmployment;
+        this.deputy = deputy;
         this.priority = priority;
         this.district = district;
         this.rank = rank;
         this.roles = roles;
         this.calendars = calendars;
-    }
-
-    public String getStreet() {
-        return street;
-    }
-
-    public UserDTO setStreet(String street) {
-        this.street = street;
-        return this;
     }
 
     public String getFirstName() {
@@ -109,6 +102,15 @@ public class UserDTO extends ExtendedDTO {
         return this;
     }
 
+    public String getStreet() {
+        return street;
+    }
+
+    public UserDTO setStreet(String street) {
+        this.street = street;
+        return this;
+    }
+
     public boolean isKids() {
         return kids;
     }
@@ -142,6 +144,15 @@ public class UserDTO extends ExtendedDTO {
 
     public UserDTO setYearsOfEmployment(LocalDate yearsOfEmployment) {
         this.yearsOfEmployment = yearsOfEmployment;
+        return this;
+    }
+
+    public DeputyDTO getDeputy() {
+        return deputy;
+    }
+
+    public UserDTO setDeputy(DeputyDTO deputy) {
+        this.deputy = deputy;
         return this;
     }
 

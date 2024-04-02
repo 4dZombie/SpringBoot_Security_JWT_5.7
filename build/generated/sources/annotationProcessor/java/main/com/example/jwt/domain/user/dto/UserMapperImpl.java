@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-01-17T16:55:59+0100",
+    date = "2024-01-25T15:06:13+0100",
     comments = "version: 1.5.5.Final, compiler: IncrementalProcessingEnvironment from gradle-language-java-7.5.jar, environment: Java 17.0.9 (Eclipse Adoptium)"
 )
 @Component
@@ -52,6 +52,7 @@ public class UserMapperImpl implements UserMapper {
         user.setCalendars( calendarDTOSetToCalendarSet( dto.getCalendars() ) );
         user.setDistrict( districtDTOToDistrict( dto.getDistrict() ) );
         user.setRank( rankDTOToRank( dto.getRank() ) );
+        user.setDeputy( deputyDTOToUser( dto.getDeputy() ) );
         user.setPriority( priorityDTOToPriority( dto.getPriority() ) );
         user.setRoles( roleDTOSetToRoleSet( dto.getRoles() ) );
 
@@ -95,12 +96,12 @@ public class UserMapperImpl implements UserMapper {
         UserDTO userDTO = new UserDTO();
 
         userDTO.setId( BO.getId() );
-        userDTO.setStreet( BO.getStreet() );
         userDTO.setFirstName( BO.getFirstName() );
         userDTO.setLastName( BO.getLastName() );
         userDTO.setEmail( BO.getEmail() );
         userDTO.setEmployment( BO.getEmployment() );
         userDTO.setAge( BO.getAge() );
+        userDTO.setStreet( BO.getStreet() );
         if ( BO.getKids() != null ) {
             userDTO.setKids( BO.getKids() );
         }
@@ -109,6 +110,7 @@ public class UserMapperImpl implements UserMapper {
         }
         userDTO.setHoliday( BO.getHoliday() );
         userDTO.setYearsOfEmployment( BO.getYearsOfEmployment() );
+        userDTO.setDeputy( userToDeputyDTO( BO.getDeputy() ) );
         userDTO.setPriority( priorityToPriorityDTO( BO.getPriority() ) );
         userDTO.setDistrict( districtToDistrictDTO( BO.getDistrict() ) );
         userDTO.setRank( rankToRankDTO( BO.getRank() ) );
@@ -187,6 +189,7 @@ public class UserMapperImpl implements UserMapper {
         calendar.setTitle( calendarDTO.getTitle() );
         calendar.setStartDate( calendarDTO.getStartDate() );
         calendar.setEndDate( calendarDTO.getEndDate() );
+        calendar.setStatus( calendarDTO.getStatus() );
 
         return calendar;
     }
@@ -229,6 +232,20 @@ public class UserMapperImpl implements UserMapper {
         rank.setName( rankDTO.getName() );
 
         return rank;
+    }
+
+    protected User deputyDTOToUser(DeputyDTO deputyDTO) {
+        if ( deputyDTO == null ) {
+            return null;
+        }
+
+        User user = new User();
+
+        user.setId( deputyDTO.getId() );
+        user.setFirstName( deputyDTO.getFirstName() );
+        user.setLastName( deputyDTO.getLastName() );
+
+        return user;
     }
 
     protected Priority priorityDTOToPriority(PriorityDTO priorityDTO) {
@@ -295,6 +312,20 @@ public class UserMapperImpl implements UserMapper {
         }
 
         return set1;
+    }
+
+    protected DeputyDTO userToDeputyDTO(User user) {
+        if ( user == null ) {
+            return null;
+        }
+
+        DeputyDTO deputyDTO = new DeputyDTO();
+
+        deputyDTO.setId( user.getId() );
+        deputyDTO.setFirstName( user.getFirstName() );
+        deputyDTO.setLastName( user.getLastName() );
+
+        return deputyDTO;
     }
 
     protected PriorityDTO priorityToPriorityDTO(Priority priority) {
@@ -398,9 +429,10 @@ public class UserMapperImpl implements UserMapper {
         CalendarDTO calendarDTO = new CalendarDTO();
 
         calendarDTO.setId( calendar.getId() );
+        calendarDTO.setTitle( calendar.getTitle() );
         calendarDTO.setStartDate( calendar.getStartDate() );
         calendarDTO.setEndDate( calendar.getEndDate() );
-        calendarDTO.setTitle( calendar.getTitle() );
+        calendarDTO.setStatus( calendar.getStatus() );
 
         return calendarDTO;
     }
