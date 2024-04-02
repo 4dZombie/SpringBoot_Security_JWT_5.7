@@ -17,7 +17,11 @@ public interface CalendarService extends ExtendedService<Calendar> {
 
     Calendar updateStatusById(UUID id, CalendarStatus status);
 
-    long calulateDaysBetween(LocalDate startDate, LocalDate endDate);
+    long calculateDaysBetween(LocalDate startDate, LocalDate endDate);
+
+    Calendar acceptStatusById(UUID id, CalendarStatus status);
+
+    Calendar declineStatusById(UUID id, CalendarStatus status);
 
     List<Calendar> getOverlappingEntriesQuery();
 
@@ -27,19 +31,11 @@ public interface CalendarService extends ExtendedService<Calendar> {
 
     List<Calendar> getOverlappingPrioritysQuery();
 
-    //List<LocalDateTime> getCreatedAt();
-
-    //List<Calendar> getOverlappingEntries();
-
     List<Calendar> getOverlappingRanks();
 
     List<LocalDateTime> getCreatedAtQuery();
 
     List<Calendar> getOverlappingDeputies();
-
-    //List<Calendar> getOverlappingPrioritys();
-
-    //List<LocalDateTime> getCreatedAtQuery();
 
     List<Calendar> compareOverlappingEntiresWithAllEntries();
 }

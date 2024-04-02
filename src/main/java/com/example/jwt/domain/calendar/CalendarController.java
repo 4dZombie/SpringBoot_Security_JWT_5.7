@@ -84,13 +84,29 @@ public class CalendarController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    //put mapping for changing status of calendar entry
     @PutMapping("/{id}/status")
     @PreAuthorize("hasAuthority('CAN_MODIFY_ENTRY_STATUS')")
     public ResponseEntity<CalendarDTO> updateStatusById(@PathVariable UUID id, @Valid @RequestBody CalendarDTO calendarDTO) {
         Calendar calendar = calendarService.updateStatusById(id, calendarDTO.getStatus());
         return new ResponseEntity<>(calendarMapper.toDTO(calendar), HttpStatus.OK);
     }
+
+
+    @PutMapping("/{id}/status/accept")
+    @PreAuthorize("hasAuthority('CAN_MODIFY_ENTRY_STATUS')")
+    public ResponseEntity<CalendarDTO> acceptStatusById(@PathVariable UUID id, @Valid @RequestBody CalendarDTO calendarDTO) {
+        Calendar calendar = calendarService.acceptStatusById(id, calendarDTO.getStatus());
+        return new ResponseEntity<>(calendarMapper.toDTO(calendar), HttpStatus.OK);
+    }
+
+
+    @PutMapping("/{id}/status/decline")
+    @PreAuthorize("hasAuthority('CAN_MODIFY_ENTRY_STATUS')")
+    public ResponseEntity<CalendarDTO> declineStatusById(@PathVariable UUID id, @Valid @RequestBody CalendarDTO calendarDTO) {
+        Calendar calendar = calendarService.declineStatusById(id, calendarDTO.getStatus());
+        return new ResponseEntity<>(calendarMapper.toDTO(calendar), HttpStatus.OK);
+    }
+
 
     //get mapping for getting overlapping entries
     @GetMapping("/overlapping")

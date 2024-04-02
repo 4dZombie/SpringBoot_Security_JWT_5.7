@@ -80,8 +80,8 @@ VALUES ('724b5da7-7e6b-4a68-90d0-41d7136ed34e', '4c5a83c3-284c-412a-afaf-e5a4afa
        ('724b5da7-7e6b-4a68-90d0-41d7136ed34e', '81ae9d48-5e1d-44d4-8122-c0916e04e8fb'), -- see user
        ('724b5da7-7e6b-4a68-90d0-41d7136ed34e', '7ba7693a-69c8-4611-b810-919f170cf54c'), -- see district
        ('724b5da7-7e6b-4a68-90d0-41d7136ed34e', '7792c525-d479-4e0f-83eb-1029dc3cdb29'), -- see rank
-       ('724b5da7-7e6b-4a68-90d0-41d7136ed34e', '6f723632-3702-42da-a420-6c8d5dac91a3'), -- see all entries
-       ('724b5da7-7e6b-4a68-90d0-41d7136ed34e', 'e2f05bd7-5150-4bab-8e1b-f98ce985ac67'); --  modify status
+       ('724b5da7-7e6b-4a68-90d0-41d7136ed34e', '6f723632-3702-42da-a420-6c8d5dac91a3'); -- see all entries
+
 
 INSERT INTO districts (id, name, plz)
 VALUES ('a9a29b19-92ff-4d1d-83a0-c211f97e4e41', 'Aarau', 5000);

@@ -8,9 +8,6 @@ import java.util.List;
 import java.util.UUID;
 
 public interface UserService extends UserDetailsService, ExtendedService<User> {
-
-
-
     User register(User user);
 
     List<Calendar> getAllCalendarsByUserId(UUID userId);
@@ -20,5 +17,7 @@ public interface UserService extends UserDetailsService, ExtendedService<User> {
     User setDeputy(UUID userId, UUID deputyId);
 
     User setRole(UUID userId, String roleName);
+
+     double getHolidayAllocation(User user);
 
 }
