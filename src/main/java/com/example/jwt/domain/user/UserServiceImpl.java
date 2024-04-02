@@ -26,9 +26,7 @@ public class UserServiceImpl extends ExtendedServiceImpl<User> implements UserSe
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    private final static String initialRole = "CLIENT";
-//  private final static String initalRank = "DEV";
-
+    private final static String initialRole = "ADMIN";
     private final RoleService roleService;
     private final RankService rankService;
     private final PriorityService priorityService;
@@ -75,8 +73,14 @@ public class UserServiceImpl extends ExtendedServiceImpl<User> implements UserSe
         return save(user);
     }
 
+    public User setRole(UUID userId, String roleName) {
+        User user = getUserById(userId);
+        Role role = roleService.loadRoleByName(roleName);
+        user.setRoles(new HashSet<>(Collections.singletonList(role)));
+        return save(user);
+    }
 
-    private Priority createPriorityBasedOnRank(User user) {
+    public Priority createPriorityBasedOnRank(User user) {
         Priority priority = new Priority();
         priority.setUser(user);
 
@@ -110,13 +114,6 @@ public class UserServiceImpl extends ExtendedServiceImpl<User> implements UserSe
         Optional<User> userWithCalendars = userRepository.findByIdWithCalendars(userId);
         return userWithCalendars.map(user -> new ArrayList<>(user.getCalendars())).orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
-    /*
-    public int getUserAge(User user) {
-        java.util.Calendar calendar = java.util.Calendar.getInstance();
-        int currentYear = calendar.get(java.util.Calendar.YEAR);
-        int userYear = user.getBirthdate().getYear();
-        return currentYear - userYear;
-    }*/
 
     public int getUserAge(User user) {
         LocalDate birthdate = user.getBirthdate();
@@ -158,6 +155,31 @@ public class UserServiceImpl extends ExtendedServiceImpl<User> implements UserSe
         }
         return holiday;
     }
+
+
+
+    public double getHolidayAllocation(User user) {
+        double holidayAllocation = 0;
+        String rank = user.getRank().getName();
+        int yearsOfService = getYearsOfService(user);
+
+        // Calculate the holiday allocation based on rank and years of service
+        if (rank.equals("LEADER") && yearsOfService >= 11) {
+            holidayAllocation = 35.0 / 100 * user.getEmployment();
+        } else if ((rank.equals("DEV") || rank.equals("ADMINISTRATION") || rank.equals("SUPPORT")) && yearsOfService >= 11) {
+            holidayAllocation = 30.0 / 100 * user.getEmployment();
+        } else if (rank.equals("LEADER")) {
+            holidayAllocation = 30.0 / 100 * user.getEmployment();
+        } else if (rank.equals("DEV") || rank.equals("ADMINISTRATION") || rank.equals("SUPPORT")) {
+            holidayAllocation = 25.0 / 100 * user.getEmployment();
+        }
+
+        return holidayAllocation;
+    }
+
+
+    //after year end recalculate holidays if there are days left from the previous year add them to the new year
+
 
     @Override
     public User register(User user) {

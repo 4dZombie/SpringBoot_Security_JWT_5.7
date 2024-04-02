@@ -2,7 +2,6 @@ package com.example.jwt.domain.priority.DTO;
 
 import com.example.jwt.core.generic.ExtendedDTO;
 
-import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 public class PriorityDTO extends ExtendedDTO {

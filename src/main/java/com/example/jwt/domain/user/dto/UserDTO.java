@@ -15,6 +15,7 @@ import javax.validation.constraints.Email;
 
 public class UserDTO extends ExtendedDTO {
 
+    private String company;
     private String firstName;
     private String lastName;
     @Email
@@ -37,8 +38,9 @@ public class UserDTO extends ExtendedDTO {
     public UserDTO() {
     }
 
-    public UserDTO(UUID id, String firstName, String lastName, String email, int employment, int age, String street, boolean kids, boolean student, double holiday, LocalDate yearsOfEmployment, DeputyDTO deputy, PriorityDTO priority, DistrictDTO district, RankDTO rank, Set<RoleDTO> roles, Set<CalendarDTO> calendars) {
+    public UserDTO(UUID id, String company, String firstName, String lastName, String email, int employment, int age, String street, boolean kids, boolean student, double holiday, LocalDate yearsOfEmployment, DeputyDTO deputy, PriorityDTO priority, DistrictDTO district, RankDTO rank, Set<RoleDTO> roles, Set<CalendarDTO> calendars) {
         super(id);
+        this.company = company;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -55,6 +57,15 @@ public class UserDTO extends ExtendedDTO {
         this.rank = rank;
         this.roles = roles;
         this.calendars = calendars;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public UserDTO setCompany(String company) {
+        this.company = company;
+        return this;
     }
 
     public String getFirstName() {

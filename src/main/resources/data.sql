@@ -7,25 +7,81 @@ VALUES ('3da0d4ab-dddf-40c1-9ccc-b326323a8e3b', 'ADMINISTRATION');
 INSERT INTO rank (id, name)
 VALUES ('f26fdf1f-bec7-46de-a39c-e2167b7f226b', 'LEADER');
 
+
 INSERT INTO authority (id, name)
-VALUES ('08b73d87-fe9c-488a-962f-f35081f775a4', 'CAN_PLACE_ENTRY');
+VALUES ('4c5a83c3-284c-412a-afaf-e5a4afae7d37', 'CAN_MODIFY_USER');
 INSERT INTO authority (id, name)
-VALUES ('9579da38-88de-469c-89a0-fddc273190f9', 'USER_MODIFY');
+VALUES ('52aa615d-5d39-4875-95d1-ec7ecc3e33f2', 'CAN_DELETE_USER');
 INSERT INTO authority (id, name)
-VALUES ('6ee80ba0-9f85-45ca-8e91-43130e0e0d83', 'USER_DELETE');
+VALUES ('eb65511d-294b-4e82-bc7a-c7ad8ffc353c', 'CAN_MODIFY_ROLE');
+INSERT INTO authority (id, name)
+VALUES ('2890b6d4-6fe8-4b5c-bc32-3c070a979032', 'CAN_CREATE_ENTRY');
+INSERT INTO authority (id, name)
+VALUES ('e7fc29c7-c2fc-4c07-9635-bf834e0460f0', 'CAN_MODIFY_ENTRY');
+INSERT INTO authority (id, name)
+VALUES ('e99eaa75-45eb-4a3a-a38a-4bea55c83790', 'CAN_DELETE_ENTRY');
+INSERT INTO authority (id, name)
+VALUES ('5d407ea0-ae13-4018-a41f-806a0b32da10', 'CAN_SEE_ENTRY');
+INSERT INTO authority (id, name)
+VALUES ('81ae9d48-5e1d-44d4-8122-c0916e04e8fb', 'CAN_SEE_USER');
+INSERT INTO authority (id, name)
+VALUES ('71aa249c-1956-44e7-a8f4-be676b2669ce', 'CAN_SEE_ROLE');
+INSERT INTO authority (id, name)
+VALUES ('7ba7693a-69c8-4611-b810-919f170cf54c', 'CAN_SEE_DISTRICT');
+INSERT INTO authority (id, name)
+VALUES ('7792c525-d479-4e0f-83eb-1029dc3cdb29', 'CAN_SEE_RANK');
+INSERT INTO authority (id, name)
+VALUES ('9b515bd6-7f9e-4698-af49-c3b762854107', 'CAN_SEE_AUTHORITY');
+INSERT INTO authority (id, name)
+VALUES ('6f723632-3702-42da-a420-6c8d5dac91a3', 'CAN_SEE_ALL_ENTRIES');
+INSERT INTO authority (id, name)
+VALUES ('a368d68e-08bb-4067-b5b6-60364b35e4e3', 'CAN_SEE_ALL_USERS');
+INSERT INTO authority (id, name)
+VALUES ('b611906b-b7bb-472b-ae22-8e24add234fa', 'CAN_SEE_PRIORITY');
+INSERT INTO authority (id, name)
+VALUES ('e2f05bd7-5150-4bab-8e1b-f98ce985ac67', 'CAN_MODIFY_ENTRY_STATUS');
+INSERT INTO authority (id, name)
+VALUES ('14b5d6f8-4948-451d-be7c-be342db1812f', 'CAN_MODIFY_PRIORITY');
+
 
 INSERT INTO role (id, name)
 VALUES ('724b5da7-7e6b-4a68-90d0-41d7136ed34e', 'CLIENT');
 INSERT INTO role (id, name)
 VALUES ('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', 'ADMIN');
 
+-- ADMIN
 INSERT INTO role_authority (role_id, authority_id)
-VALUES ('724b5da7-7e6b-4a68-90d0-41d7136ed34e', '08b73d87-fe9c-488a-962f-f35081f775a4');
-VALUES ('724b5da7-7e6b-4a68-90d0-41d7136ed34e', '9579da38-88de-469c-89a0-fddc273190f9');
-VALUES ('724b5da7-7e6b-4a68-90d0-41d7136ed34e', '6ee80ba0-9f85-45ca-8e91-43130e0e0d83');
-VALUES ('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', '08b73d87-fe9c-488a-962f-f35081f775a4');
-VALUES ('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', '9579da38-88de-469c-89a0-fddc273190f9');
-VALUES ('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', '6ee80ba0-9f85-45ca-8e91-43130e0e0d83');
+VALUES ('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', '4c5a83c3-284c-412a-afaf-e5a4afae7d37'),
+       ('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', '52aa615d-5d39-4875-95d1-ec7ecc3e33f2'),
+       ('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', 'eb65511d-294b-4e82-bc7a-c7ad8ffc353c'),
+       ('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', '2890b6d4-6fe8-4b5c-bc32-3c070a979032'),
+       ('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', 'e7fc29c7-c2fc-4c07-9635-bf834e0460f0'),
+       ('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', 'e99eaa75-45eb-4a3a-a38a-4bea55c83790'),
+       ('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', '5d407ea0-ae13-4018-a41f-806a0b32da10'),
+       ('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', '81ae9d48-5e1d-44d4-8122-c0916e04e8fb'),
+       ('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', '71aa249c-1956-44e7-a8f4-be676b2669ce'),
+       ('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', '7ba7693a-69c8-4611-b810-919f170cf54c'),
+       ('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', '7792c525-d479-4e0f-83eb-1029dc3cdb29'),
+       ('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', '9b515bd6-7f9e-4698-af49-c3b762854107'),
+       ('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', '6f723632-3702-42da-a420-6c8d5dac91a3'),
+       ('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', 'a368d68e-08bb-4067-b5b6-60364b35e4e3'),
+       ('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', 'b611906b-b7bb-472b-ae22-8e24add234fa'),
+       ('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', 'e2f05bd7-5150-4bab-8e1b-f98ce985ac67'),
+       ('5829ba9a-55fe-4c23-9a09-17fa1f8bda46', '14b5d6f8-4948-451d-be7c-be342db1812f');
+
+-- CLIENT
+INSERT INTO role_authority (role_id, authority_id)
+VALUES ('724b5da7-7e6b-4a68-90d0-41d7136ed34e', '4c5a83c3-284c-412a-afaf-e5a4afae7d37'), -- modify user
+       ('724b5da7-7e6b-4a68-90d0-41d7136ed34e', 'eb65511d-294b-4e82-bc7a-c7ad8ffc353c'), -- modify role
+       ('724b5da7-7e6b-4a68-90d0-41d7136ed34e', '2890b6d4-6fe8-4b5c-bc32-3c070a979032'), -- create entry
+       ('724b5da7-7e6b-4a68-90d0-41d7136ed34e', 'e7fc29c7-c2fc-4c07-9635-bf834e0460f0'), --modify entry
+       ('724b5da7-7e6b-4a68-90d0-41d7136ed34e', 'e99eaa75-45eb-4a3a-a38a-4bea55c83790'), -- delete entry
+       ('724b5da7-7e6b-4a68-90d0-41d7136ed34e', '5d407ea0-ae13-4018-a41f-806a0b32da10'), -- see entry
+       ('724b5da7-7e6b-4a68-90d0-41d7136ed34e', '81ae9d48-5e1d-44d4-8122-c0916e04e8fb'), -- see user
+       ('724b5da7-7e6b-4a68-90d0-41d7136ed34e', '7ba7693a-69c8-4611-b810-919f170cf54c'), -- see district
+       ('724b5da7-7e6b-4a68-90d0-41d7136ed34e', '7792c525-d479-4e0f-83eb-1029dc3cdb29'), -- see rank
+       ('724b5da7-7e6b-4a68-90d0-41d7136ed34e', '6f723632-3702-42da-a420-6c8d5dac91a3'); -- see all entries
+
 
 INSERT INTO districts (id, name, plz)
 VALUES ('a9a29b19-92ff-4d1d-83a0-c211f97e4e41', 'Aarau', 5000);
@@ -9070,19 +9126,14 @@ VALUES ('30ae8016-6bae-48e9-b545-0716fc20d530', 'Zürich Sonderdienste', 8099);
 INSERT INTO districts (id, name, plz)
 VALUES ('ea5a977f-bf88-40f8-a461-80a987c5151c', 'Zürich', 8099);
 
-
-
--- INSERT INTO users (id, first_name, last_name, birthdate, email, password, street, kids, student, employment,
---                    district_id, rank_id, created_at, created_by, modified_at, last_modified_by, years_of_employment)
--- VALUES ('17b49eee-4726-428b-8b27-722d30906f9c', 'Test', 'Surename', '2000-12-20', 'test@test.ch',
---         '$2a$10$4wHeTxsmRR0drcWULXHgs.kxm9c/ON2wmmYTeOLTnYe5uP.kdndi.', 'Strasse 1', 'true', 'false', '100',
---         'a9a29b19-92ff-4d1d-83a0-c211f97e4e41', '45b41bb1-762a-4b70-a4fa-985f97814507', '2000-12-20',
---         '17b49eee-4726-428b-8b27-722d30906f9c', '2000-12-20', '17b49eee-4726-428b-8b27-722d30906f9c', '2000-12-20');
-
+-- INSERT INTO user (id,created_at,modified_at,age,birthday,email,enployment,first_name,holiday,kids,last_name,password,street,student,years_of_employment,created_by,last_modified_by,deputy_id,distrcit_id,priority_id,rank_id)
+-- VALUES ('8dc1220b-f5ea-4611-959c-2ccb84297385','2024-03-19 16:36:36.687434','2024-03-19 16:36:36.720992',24,'2000-01-01','admin@mail.ch',100,'Admin',30,'true','Admin','$2a$10$5ds3Oa0bW0aquzoDErR0Muhr8k2eiU9xFipBGdeBvddi4i/2UqgJy','Strasse 1',true,'2000-01-01','2024-03-19 16:36:36.687434','2024-03-19 16:36:36.687434',null,'4d096460-cfc4-4dea-914c-bdafd4789d34','657b2ca2-875b-4032-9c2a-cdd85ec7a762','45b41bb1-762a-4b70-a4fa-985f97814507');
+--
 -- INSERT INTO users_role (users_id, role_id)
--- VALUES ('17b49eee-4726-428b-8b27-722d30906f9c', '724b5da7-7e6b-4a68-90d0-41d7136ed34e');
-
+-- VALUES ('8dc1220b-f5ea-4611-959c-2ccb84297385', '5829ba9a-55fe-4c23-9a09-17fa1f8bda46');
+--
 -- INSERT INTO priority (id, user_id, points)
--- VALUES ('be19b1ec-e03b-4f47-836c-bf2fdc1bdc93', '17b49eee-4726-428b-8b27-722d30906f9c', 20);
-
--- INSERT INTO calendar (id, end_date, start_date, title, user_id) VALUES ('ab36f892-814e-417f-bdeb-86a9d74faad5', '');
+-- VALUES ('8dc1220b-f5ea-4611-959c-2ccb84297385', '8dc1220b-f5ea-4611-959c-2ccb84297385', 30);
+--
+-- INSERT INTO calendar (id,created_at,modified_at, end_date, start_date, title,created_by,last_modified_by, user_id)
+-- VALUES ('8dc1220b-f5ea-4611-959c-2ccb84297385','','', '2024-03-19', '2024-03-19','IN_PROGRESS', 'AdminCalendar','', '','8dc1220b-f5ea-4611-959c-2ccb84297385');

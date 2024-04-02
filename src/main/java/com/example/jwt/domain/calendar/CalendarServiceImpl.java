@@ -1,31 +1,70 @@
 package com.example.jwt.domain.calendar;
 
-import com.example.jwt.core.generic.ExtendedRepository;
 import com.example.jwt.core.generic.ExtendedServiceImpl;
 import com.example.jwt.domain.user.User;
+import com.example.jwt.domain.user.UserRepository;
+import com.example.jwt.domain.user.UserService;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.PersistenceContext;
 import java.time.LocalDate;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 @Service
 public class CalendarServiceImpl extends ExtendedServiceImpl<Calendar> implements CalendarService {
 
     private final CalendarRepository calendarRepository;
+    private final UserRepository userRepository;
+    @Autowired
+    private UserService userService;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Autowired
-    public CalendarServiceImpl(CalendarRepository calendarRepository, Logger logger) {
+    public CalendarServiceImpl(CalendarRepository calendarRepository, Logger logger, UserRepository userRepository, EntityManager entityManager) {
         super(calendarRepository, logger);
         this.calendarRepository = calendarRepository;
+        this.userRepository = userRepository;
+        this.entityManager = entityManager;
     }
 
     @Override
-    public Calendar calendarCreate(Calendar calendar) {
-        calendar.setStatus(CalendarStatus.IN_PROGRESS);
-        return calendarRepository.save(calendar);
+    public long calculateDaysBetween(LocalDate startDate, LocalDate endDate) {
+        return DAYS.between(startDate, endDate);
+    }
+
+    private boolean hasEnoughHolidays(User user, long requestedDays) {
+        return user.getHoliday() >= requestedDays;
+    }
+
+
+    @Transactional
+    public Calendar calendarCreate(Calendar calendar, User user) {
+        long requestedDays = calculateDaysBetween(calendar.getStartDate(), calendar.getEndDate());
+        // Verify the user has enough holidays
+        if (!hasEnoughHolidays(user, requestedDays)) {
+            throw new RuntimeException("Not enough holidays");
+        } else {
+            // Deduct the requested days from the user's holiday balance
+            double newHolidayBalance = user.getHoliday() - requestedDays;
+            user.setHoliday(newHolidayBalance);
+            // Persist changes to the User entity
+            User managedUser = entityManager.merge(user);
+            // Associate the calendar with the user and set the status
+            calendar.setUser(managedUser);
+            calendar.setStatus(CalendarStatus.IN_BEARBEITUNG);
+            return calendarRepository.save(calendar);
+        }
     }
 
     @Override
@@ -34,112 +73,174 @@ public class CalendarServiceImpl extends ExtendedServiceImpl<Calendar> implement
     }
 
     @Override
-    public List<Calendar> getOverlappingEntries(LocalDate startDate, LocalDate endDate, CalendarStatus status) {
-        return calendarRepository.findOverlappingEntries(startDate, endDate, status);
+    public Calendar updateStatusById(UUID id, CalendarStatus status) {
+        return calendarRepository.findById(id).map(calendarToUpdate -> {
+            calendarToUpdate.setStatus(status);
+            return calendarRepository.save(calendarToUpdate);
+        }).orElseThrow(() -> new EntityNotFoundException("Calendar not found with id: " + id));
     }
-/*
-    public void updateCalendarEntryStatuses() {
-        List<Calendar> inProgressEntries = findByStatus(CalendarStatus.IN_PROGRESS);
-        for (Calendar entry : inProgressEntries) {
-            List<Calendar> overlappingEntries = getOverlappingEntries(entry.getStartDate(), entry.getEndDate(), CalendarStatus.IN_PROGRESS);
-            if (overlappingEntries.isEmpty() || (overlappingEntries.size() == 1 && overlappingEntries.contains(entry))) {
-                entry.setStatus(CalendarStatus.ACCEPTED);
-            } else {
-                entry.setStatus(CalendarStatus.REJECTED);
+
+    @Override
+    public Calendar acceptStatusById(UUID id, CalendarStatus status) {
+        return calendarRepository.findById(id).map(calendarToUpdate -> {
+            // Simply update the calendar status to accepted without modifying holidays
+            calendarToUpdate.setStatus(CalendarStatus.AKZEPTIERT);
+            return calendarRepository.save(calendarToUpdate);
+        }).orElseThrow(() -> new EntityNotFoundException("Calendar not found with id: " + id));
+    }
+
+
+
+    private long calculateHolidaysToDeduct(Calendar calendar) {
+        return DAYS.between(calendar.getStartDate(), calendar.getEndDate()) + 1;
+    }
+
+
+    @Override
+    public Calendar declineStatusById(UUID id, CalendarStatus status) {
+        return calendarRepository.findById(id).map(calendarToUpdate -> {
+            User user = calendarToUpdate.getUser();
+            long holidaysToRefund = calculateHolidaysToDeduct(calendarToUpdate);
+
+            // Use UserService to get the original holiday allocation
+            double originalHolidayAllocation = userService.getHolidayAllocation(user);
+            double updatedHolidayBalance = Math.min(user.getHoliday() + holidaysToRefund, originalHolidayAllocation);
+
+            user.setHoliday(updatedHolidayBalance);
+            userRepository.save(user);
+
+            calendarToUpdate.setStatus(CalendarStatus.ABGELEHNT);
+            return calendarRepository.save(calendarToUpdate);
+        }).orElseThrow(() -> new EntityNotFoundException("Calendar not found with id: " + id));
+    }
+
+
+
+    @Override
+    public List<Calendar> getOverlappingEntriesQuery() {
+        return calendarRepository.findOverlappingEntries();
+    }
+
+    @Override
+    public List<Calendar> getOverlappingRanksQuery() {
+        return calendarRepository.findOverlappingRanks();
+    }
+
+    public List<Calendar> getOverlappingRanks() {
+        List<Calendar> overlappingEntries = getOverlappingEntriesQuery();
+        List<Calendar> entriesWithMatchingRanks = new ArrayList<>();
+
+        for (int i = 0; i < overlappingEntries.size(); i++) {
+            for (int j = i + 1; j < overlappingEntries.size(); j++) {
+                Calendar entry1 = overlappingEntries.get(i);
+                Calendar entry2 = overlappingEntries.get(j);
+
+                if (entry1.getUser().getId().equals(entry2.getUser().getId()) && doDatesOverlap(entry1, entry2)) {
+                    throw new IllegalStateException("User cannot have overlapping entries: User ID " + entry1.getUser().getId());
+
+                }
+
+                if (!entry1.getUser().getId().equals(entry2.getUser().getId()) && doDatesOverlap(entry1, entry2) && entry1.getUser().getRank().equals(entry2.getUser().getRank())) {
+                    if (!entriesWithMatchingRanks.contains(entry1)) {
+                        entriesWithMatchingRanks.add(entry1);
+                    }
+                    if (!entriesWithMatchingRanks.contains(entry2)) {
+                        entriesWithMatchingRanks.add(entry2);
+                    }
+                }
             }
-            calendarRepository.save(entry);
         }
+
+        return entriesWithMatchingRanks;
     }
-*/
 
-    // @Transactional
-    // public void updateCalendarEntryStatuses() {
-    //  List<Calendar> inProgressEntries = findByStatus(CalendarStatus.IN_PROGRESS);
-    // for (Calendar currentEntry : inProgressEntries) {
-    // Fetch all entries that overlap with the current entry
-    //    List<Calendar> overlappingEntries = calendarRepository.findOverlappingEntries(currentEntry.getStartDate(), currentEntry.getEndDate(), CalendarStatus.IN_PROGRESS);
-
-    // Remove the current entry from the list of overlaps if present
-    //   overlappingEntries.removeIf(entry -> entry.equals(currentEntry));
-
-    // Process based on overlaps
-    //    if (overlappingEntries.isEmpty()) {
-    //        acceptCalendarEntry(currentEntry);
-    //    } else {
-    //        processOverlappingEntries(currentEntry, overlappingEntries);
-    //    }
-    // }
-
-    //public void acceptCalendarEntry(Calendar calendar) {
-    //    if (calendar != null) {
-    //        calendar.setStatus(CalendarStatus.ACCEPTED);
-    //        calendarRepository.save(calendar);
-    //    }
-    //}
+    private boolean doDatesOverlap(Calendar entry1, Calendar entry2) {
+        return entry1.getStartDate().isBefore(entry2.getEndDate()) && entry2.getStartDate().isBefore(entry1.getEndDate());
+    }
 
 
-//
-//        private void declineCalendarEntry(Calendar entry) {
-//            // Implementation details...
-//        }
-//
-//        private void adjustUserHolidayTotal(User user, Calendar entry) {
-//            // Implementation details...
-//        }
-//
-//        private double calculateHolidayDays(Calendar entry) {
-//            // Implementation details...
-//            // Placeholder implementation, you need to calculate the actual days
-//        }
+    public List<Calendar> getOverlappingDeputies() {
+        List<Calendar> entriesWithMatchingRanks = getOverlappingRanks();
+        List<Calendar> entriesWithDeputyConflicts = new ArrayList<>();
 
-//        private void processOverlappingEntries(Calendar currentEntry, List<Calendar> overlappingEntries) {
-//            User currentUser = currentEntry.getUser();
-//            for (Calendar overlap : overlappingEntries) {
-//                User overlapUser = overlap.getUser();
-//                if (currentUser.getDeputy() != null && currentUser.getDeputy().equals(overlappingUser)) {
-//                    declineCalendarEntry(currentEntry);
-//                    return; // Stop processing as we found an overlap with a deputy
-//                }
-//            }
-//            // If no deputy-related declines occurred, compare rank and priority
-//            compareRankAndPriority(currentEntry, overlappingEntries);
-//        }
-//
-//        private void compareRankAndPriority(Calendar currentEntry, List<Calendar> overlappingEntries) {
-//            // Example logic, needs to be fully implemented
-//            for (Calendar overlap : overlappingEntries) {
-//                // Logic to compare rank and priority
-//                // This might involve fetching more detailed user information or adding additional methods
-//            }
-//
-//            // Decide whether to accept or decline based on comparisons
-//        }
-//
-//        private void acceptCalendarEntry(Calendar entry) {
-//            entry.setStatus(CalendarStatus.ACCEPTED);
-//            // Deduct days from user's holiday total, ensure you handle edge cases like holidays going negative
-//            adjustUserHolidayTotal(entry.getUser(), entry);
-//            calendarRepository.save(entry);
-//        }
-//
-//        private void declineCalendarEntry(Calendar entry) {
-//            entry.setStatus(CalendarStatus.DECLINED);
-//            calendarRepository.save(entry);
-//        }
-//
-//        private void adjustUserHolidayTotal(User user, Calendar entry) {
-//            // Implement logic to calculate and update the user's holiday total based on the entry
-//            double holidayDays = calculateHolidayDays(entry);
-//            double newTotal = user.getHoliday() - holidayDays;
-//            user.setHoliday(newTotal);
-//            userService.save(user); // Assuming you have a method to save the updated user
-//        }
-//
-//        private double calculateHolidayDays(Calendar entry) {
-//            // Implement logic to calculate the number of days between startDate and endDate
-//            // Consider using java.time.temporal.ChronoUnit.DAYS.between(...)
-//            return 0; // Placeholder return
-//        }
+        System.out.println("Entries with Matching Ranks: " + entriesWithMatchingRanks.size());
 
+        for (int i = 0; i < entriesWithMatchingRanks.size(); i++) {
+            Calendar entry1 = entriesWithMatchingRanks.get(i);
+            User user1 = entry1.getUser();
+            User deputy1 = user1.getDeputy(); // Assuming getDeputy returns a User object directly
+
+            for (int j = i + 1; j < entriesWithMatchingRanks.size(); j++) {
+                Calendar entry2 = entriesWithMatchingRanks.get(j);
+                User user2 = entry2.getUser();
+
+                if (deputy1 != null && user2.equals(deputy1)) {
+                    System.out.println("Deputy Conflict Found: " + entry1.getId() + " & " + entry2.getId());
+                    entriesWithDeputyConflicts.add(entry1);
+                    entriesWithDeputyConflicts.add(entry2);
+                    //change status to "NO_DEPUTY"
+                } else {
+                    System.out.println("No Deputy Conflict or Deputy is Null for User: " + user1.getId());
+                }
+            }
+        }
+
+        System.out.println("Entries with Deputy Conflicts: " + entriesWithDeputyConflicts.size());
+        return entriesWithDeputyConflicts;
+    }
+
+    public List<Calendar> compareOverlappingEntiresWithAllEntries() {
+        List<Calendar> allEntries = findAll();
+        Map<UUID, Calendar> entriesById = allEntries.stream()
+                .collect(Collectors.toMap(Calendar::getId, Function.identity()));
+        List<Calendar> overlappingEntries = getOverlappingEntriesQuery();
+
+        allEntries.forEach(entry -> entry.setStatus(CalendarStatus.VORLAEUFIG_AKZEPTIERT));
+
+        for (Calendar overlap : overlappingEntries) {
+            Calendar entry1 = entriesById.get(overlap.getId());
+            for (Calendar entry2 : allEntries) {
+                if (!entry1.equals(entry2) && doDatesOverlap(entry1, entry2)) {
+                    boolean sameRank = entry1.getUser().getRank().equals(entry2.getUser().getRank());
+                    boolean isDeputyOverlap = entry1.getUser().getDeputy() != null && entry1.getUser().getDeputy().equals(entry2.getUser());
+                    boolean isReverseDeputyOverlap = entry2.getUser().getDeputy() != null && entry2.getUser().getDeputy().equals(entry1.getUser());
+
+                    // Check if neither user has a deputy selected
+                    boolean noDeputySelected = entry1.getUser().getDeputy() == null && entry2.getUser().getDeputy() == null;
+
+                    if (sameRank || isDeputyOverlap || isReverseDeputyOverlap) {
+                        entry1.setStatus(CalendarStatus.VORLAEUFIG_ABGELEHNT);
+                        entry2.setStatus(CalendarStatus.VORLAEUFIG_ABGELEHNT);
+                    } else if (noDeputySelected) {
+                        // If no deputy is selected for both entries, set status to KEINE_STELLVERTRETUNG
+                        entry1.setStatus(CalendarStatus.KEINE_STELLVERTRETUNG);
+                        entry2.setStatus(CalendarStatus.KEINE_STELLVERTRETUNG);
+                    } else {
+                        // This assumes that there's another condition or default behavior you want to apply
+                        entry1.setStatus(CalendarStatus.IN_BEARBEITUNG);
+                        entry2.setStatus(CalendarStatus.IN_BEARBEITUNG);
+                    }
+                }
+            }
+        }
+
+        allEntries.forEach(this::save);
+        return allEntries;
+    }
+
+    @Override
+    public List<Calendar> getOverlappingDeputiesQuery() {
+        return calendarRepository.findOverlappingDeputies();
+    }
+
+    @Override
+    public List<Calendar> getOverlappingPrioritysQuery() {
+        return calendarRepository.findOverlappingPrioritys();
+    }
+
+    @Override
+    public List<LocalDateTime> getCreatedAtQuery() {
+        return calendarRepository.findCreatedAt();
+    }
 
 }

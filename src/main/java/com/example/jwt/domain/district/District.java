@@ -8,7 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.Set;
-import java.util.UUID;
 
 
 @Entity
@@ -22,6 +21,7 @@ public class District extends ExtendedEntity {
     private int plz;
 
     @OneToMany(mappedBy = "district")
+    //@JsonManagedReference
     private Set<User> users;
 
     public String getName() {
