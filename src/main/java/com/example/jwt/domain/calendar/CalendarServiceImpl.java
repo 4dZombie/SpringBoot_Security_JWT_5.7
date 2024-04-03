@@ -206,6 +206,7 @@ public class CalendarServiceImpl extends ExtendedServiceImpl<Calendar> implement
                     boolean isReverseDeputyOverlap = entry2.getUser().getDeputy() != null && entry2.getUser().getDeputy().equals(entry1.getUser());
 
                     // Check if neither user has a deputy selected
+                    //currently only works when both accounts dont have a deputy selected
                     boolean noDeputySelected = entry1.getUser().getDeputy() == null && entry2.getUser().getDeputy() == null;
 
                     if (sameRank || isDeputyOverlap || isReverseDeputyOverlap) {

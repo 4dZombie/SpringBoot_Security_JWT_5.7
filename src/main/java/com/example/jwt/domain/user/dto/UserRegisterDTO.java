@@ -28,7 +28,7 @@ public class UserRegisterDTO extends ExtendedDTO {
     private String email;
 
     @NotNull
-    @Size(min = 4, max = 50)
+    @Size(min = 8, max = 50)
     private String password;
 
     @NotNull
