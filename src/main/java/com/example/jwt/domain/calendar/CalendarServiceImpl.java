@@ -40,7 +40,7 @@ public class CalendarServiceImpl extends ExtendedServiceImpl<Calendar> implement
 
     @Override
     public long calculateDaysBetween(LocalDate startDate, LocalDate endDate) {
-        return DAYS.between(startDate, endDate);
+        return DAYS.between(startDate, endDate) + 1;
     }
 
     private boolean hasEnoughHolidays(User user, long requestedDays) {
@@ -61,6 +61,7 @@ public class CalendarServiceImpl extends ExtendedServiceImpl<Calendar> implement
             // Persist changes to the User entity
             User managedUser = entityManager.merge(user);
             // Associate the calendar with the user and set the status
+            userRepository.save(user);
             calendar.setUser(managedUser);
             calendar.setStatus(CalendarStatus.IN_BEARBEITUNG);
             return calendarRepository.save(calendar);
@@ -188,26 +189,47 @@ public class CalendarServiceImpl extends ExtendedServiceImpl<Calendar> implement
         System.out.println("Entries with Deputy Conflicts: " + entriesWithDeputyConflicts.size());
         return entriesWithDeputyConflicts;
     }
-
+//TODO: After accepted or declined to not change status anymore DONE BUT NOT TESTED
     public List<Calendar> compareOverlappingEntiresWithAllEntries() {
         List<Calendar> allEntries = findAll();
         Map<UUID, Calendar> entriesById = allEntries.stream()
                 .collect(Collectors.toMap(Calendar::getId, Function.identity()));
+
         List<Calendar> overlappingEntries = getOverlappingEntriesQuery();
 
-        allEntries.forEach(entry -> entry.setStatus(CalendarStatus.VORLAEUFIG_AKZEPTIERT));
+        allEntries.forEach(entry -> {
+            if(!entry.getStatus().equals(CalendarStatus.AKZEPTIERT) && !entry.getStatus().equals(CalendarStatus.ABGELEHNT)){
+                if (entry.getUser().getDeputy() == null){
+                    entry.setStatus(CalendarStatus.KEINE_STELLVERTRETUNG);
+                } else {
+                entry.setStatus(CalendarStatus.VORLAEUFIG_AKZEPTIERT);
+        }
+            }
+        });
 
         for (Calendar overlap : overlappingEntries) {
+
             Calendar entry1 = entriesById.get(overlap.getId());
+
+            if (entry1.getStatus().equals(CalendarStatus.AKZEPTIERT) || entry1.getStatus().equals(CalendarStatus.ABGELEHNT)) {
+                continue;
+            }
+
             for (Calendar entry2 : allEntries) {
+
+                if (entry1.equals(entry2) || entry2.getStatus().equals(CalendarStatus.AKZEPTIERT) || entry2.getStatus().equals(CalendarStatus.ABGELEHNT)) {
+                    continue;
+                }
+
                 if (!entry1.equals(entry2) && doDatesOverlap(entry1, entry2)) {
+
                     boolean sameRank = entry1.getUser().getRank().equals(entry2.getUser().getRank());
                     boolean isDeputyOverlap = entry1.getUser().getDeputy() != null && entry1.getUser().getDeputy().equals(entry2.getUser());
                     boolean isReverseDeputyOverlap = entry2.getUser().getDeputy() != null && entry2.getUser().getDeputy().equals(entry1.getUser());
 
                     // Check if neither user has a deputy selected
                     //currently only works when both accounts dont have a deputy selected
-                    boolean noDeputySelected = entry1.getUser().getDeputy() == null && entry2.getUser().getDeputy() == null;
+                    boolean noDeputySelected = entry1.getUser().getDeputy() == null;
 
                     if (sameRank || isDeputyOverlap || isReverseDeputyOverlap) {
                         entry1.setStatus(CalendarStatus.VORLAEUFIG_ABGELEHNT);
@@ -215,7 +237,6 @@ public class CalendarServiceImpl extends ExtendedServiceImpl<Calendar> implement
                     } else if (noDeputySelected) {
                         // If no deputy is selected for both entries, set status to KEINE_STELLVERTRETUNG
                         entry1.setStatus(CalendarStatus.KEINE_STELLVERTRETUNG);
-                        entry2.setStatus(CalendarStatus.KEINE_STELLVERTRETUNG);
                     } else {
                         // This assumes that there's another condition or default behavior you want to apply
                         entry1.setStatus(CalendarStatus.IN_BEARBEITUNG);

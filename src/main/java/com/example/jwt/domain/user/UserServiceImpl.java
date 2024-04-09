@@ -155,6 +155,31 @@ public class UserServiceImpl extends ExtendedServiceImpl<User> implements UserSe
         }
         return holiday;
     }
+// Possible solution to enter default holidays for each rank
+//    public double getUserHoliday(User user, Double leaderDefaultHoliday, Double devDefaultHoliday, Double adminDefaultHoliday, Double supportDefaultHoliday) {
+//        double leaderHoliday = leaderDefaultHoliday != null ? leaderDefaultHoliday : 30.0;
+//        double devHoliday = devDefaultHoliday != null ? devDefaultHoliday : 25.0;
+//        double adminHoliday = adminDefaultHoliday != null ? adminDefaultHoliday : 25.0;
+//        double supportHoliday = supportDefaultHoliday != null ? supportDefaultHoliday : 25.0;
+//
+//        double holiday = 0;
+//
+//        String rank = user.getRank().getName();
+//        int yearsOfService = getYearsOfService(user);
+//
+//        if ("LEADER".equals(rank)) {
+//            holiday = (yearsOfService >= 11 ? 35.0 : leaderHoliday) / 100 * user.getEmployment();
+//        } else if ("DEV".equals(rank)) {
+//            holiday = (yearsOfService >= 11 ? 30.0 : devHoliday) / 100 * user.getEmployment();
+//        } else if ("ADMINISTRATION".equals(rank)) {
+//            holiday = (yearsOfService >= 11 ? 30.0 : adminHoliday) / 100 * user.getEmployment();
+//        } else if ("SUPPORT".equals(rank)) {
+//            holiday = (yearsOfService >= 11 ? 30.0 : supportHoliday) / 100 * user.getEmployment();
+//        }
+//
+//        return holiday;
+//    }
+
 
 
 
@@ -163,7 +188,6 @@ public class UserServiceImpl extends ExtendedServiceImpl<User> implements UserSe
         String rank = user.getRank().getName();
         int yearsOfService = getYearsOfService(user);
 
-        // Calculate the holiday allocation based on rank and years of service
         if (rank.equals("LEADER") && yearsOfService >= 11) {
             holidayAllocation = 35.0 / 100 * user.getEmployment();
         } else if ((rank.equals("DEV") || rank.equals("ADMINISTRATION") || rank.equals("SUPPORT")) && yearsOfService >= 11) {
