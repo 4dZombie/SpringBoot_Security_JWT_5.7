@@ -26,9 +26,7 @@ public class UserServiceImpl extends ExtendedServiceImpl<User> implements UserSe
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    private final static String initialRole = "CLIENT";
-//  private final static String initalRank = "DEV";
-
+    private final static String initialRole = "ADMIN";
     private final RoleService roleService;
     private final RankService rankService;
     private final PriorityService priorityService;
@@ -75,8 +73,14 @@ public class UserServiceImpl extends ExtendedServiceImpl<User> implements UserSe
         return save(user);
     }
 
+    public User setRole(UUID userId, String roleName) {
+        User user = getUserById(userId);
+        Role role = roleService.loadRoleByName(roleName);
+        user.setRoles(new HashSet<>(Collections.singletonList(role)));
+        return save(user);
+    }
 
-    private Priority createPriorityBasedOnRank(User user) {
+    public Priority createPriorityBasedOnRank(User user) {
         Priority priority = new Priority();
         priority.setUser(user);
 
@@ -110,13 +114,6 @@ public class UserServiceImpl extends ExtendedServiceImpl<User> implements UserSe
         Optional<User> userWithCalendars = userRepository.findByIdWithCalendars(userId);
         return userWithCalendars.map(user -> new ArrayList<>(user.getCalendars())).orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
-    /*
-    public int getUserAge(User user) {
-        java.util.Calendar calendar = java.util.Calendar.getInstance();
-        int currentYear = calendar.get(java.util.Calendar.YEAR);
-        int userYear = user.getBirthdate().getYear();
-        return currentYear - userYear;
-    }*/
 
     public int getUserAge(User user) {
         LocalDate birthdate = user.getBirthdate();
@@ -158,6 +155,55 @@ public class UserServiceImpl extends ExtendedServiceImpl<User> implements UserSe
         }
         return holiday;
     }
+// Possible solution to enter default holidays for each rank
+//    public double getUserHoliday(User user, Double leaderDefaultHoliday, Double devDefaultHoliday, Double adminDefaultHoliday, Double supportDefaultHoliday) {
+//        double leaderHoliday = leaderDefaultHoliday != null ? leaderDefaultHoliday : 30.0;
+//        double devHoliday = devDefaultHoliday != null ? devDefaultHoliday : 25.0;
+//        double adminHoliday = adminDefaultHoliday != null ? adminDefaultHoliday : 25.0;
+//        double supportHoliday = supportDefaultHoliday != null ? supportDefaultHoliday : 25.0;
+//
+//        double holiday = 0;
+//
+//        String rank = user.getRank().getName();
+//        int yearsOfService = getYearsOfService(user);
+//
+//        if ("LEADER".equals(rank)) {
+//            holiday = (yearsOfService >= 11 ? 35.0 : leaderHoliday) / 100 * user.getEmployment();
+//        } else if ("DEV".equals(rank)) {
+//            holiday = (yearsOfService >= 11 ? 30.0 : devHoliday) / 100 * user.getEmployment();
+//        } else if ("ADMINISTRATION".equals(rank)) {
+//            holiday = (yearsOfService >= 11 ? 30.0 : adminHoliday) / 100 * user.getEmployment();
+//        } else if ("SUPPORT".equals(rank)) {
+//            holiday = (yearsOfService >= 11 ? 30.0 : supportHoliday) / 100 * user.getEmployment();
+//        }
+//
+//        return holiday;
+//    }
+
+
+
+
+    public double getHolidayAllocation(User user) {
+        double holidayAllocation = 0;
+        String rank = user.getRank().getName();
+        int yearsOfService = getYearsOfService(user);
+
+        if (rank.equals("LEADER") && yearsOfService >= 11) {
+            holidayAllocation = 35.0 / 100 * user.getEmployment();
+        } else if ((rank.equals("DEV") || rank.equals("ADMINISTRATION") || rank.equals("SUPPORT")) && yearsOfService >= 11) {
+            holidayAllocation = 30.0 / 100 * user.getEmployment();
+        } else if (rank.equals("LEADER")) {
+            holidayAllocation = 30.0 / 100 * user.getEmployment();
+        } else if (rank.equals("DEV") || rank.equals("ADMINISTRATION") || rank.equals("SUPPORT")) {
+            holidayAllocation = 25.0 / 100 * user.getEmployment();
+        }
+
+        return holidayAllocation;
+    }
+
+
+    //after year end recalculate holidays if there are days left from the previous year add them to the new year
+
 
     @Override
     public User register(User user) {

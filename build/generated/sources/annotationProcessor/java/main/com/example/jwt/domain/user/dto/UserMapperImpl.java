@@ -13,22 +13,40 @@ import com.example.jwt.domain.priority.Priority;
 import com.example.jwt.domain.role.Role;
 import com.example.jwt.domain.role.dto.RoleDTO;
 import com.example.jwt.domain.user.User;
+import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import javax.annotation.processing.Generated;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeConstants;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-01-25T15:06:13+0100",
-    comments = "version: 1.5.5.Final, compiler: IncrementalProcessingEnvironment from gradle-language-java-7.5.jar, environment: Java 17.0.9 (Eclipse Adoptium)"
+    date = "2024-04-08T12:45:20+0200",
+    comments = "version: 1.5.5.Final, compiler: IncrementalProcessingEnvironment from gradle-language-java-7.5.jar, environment: Java 17.0.10 (Eclipse Adoptium)"
 )
 @Component
 public class UserMapperImpl implements UserMapper {
+
+    private final DatatypeFactory datatypeFactory;
+
+    public UserMapperImpl() {
+        try {
+            datatypeFactory = DatatypeFactory.newInstance();
+        }
+        catch ( DatatypeConfigurationException ex ) {
+            throw new RuntimeException( ex );
+        }
+    }
 
     @Override
     public User fromDTO(UserDTO dto) {
@@ -39,6 +57,7 @@ public class UserMapperImpl implements UserMapper {
         User user = new User();
 
         user.setId( dto.getId() );
+        user.setCompany( dto.getCompany() );
         user.setFirstName( dto.getFirstName() );
         user.setLastName( dto.getLastName() );
         user.setEmail( dto.getEmail() );
@@ -88,39 +107,6 @@ public class UserMapperImpl implements UserMapper {
     }
 
     @Override
-    public UserDTO toDTO(User BO) {
-        if ( BO == null ) {
-            return null;
-        }
-
-        UserDTO userDTO = new UserDTO();
-
-        userDTO.setId( BO.getId() );
-        userDTO.setFirstName( BO.getFirstName() );
-        userDTO.setLastName( BO.getLastName() );
-        userDTO.setEmail( BO.getEmail() );
-        userDTO.setEmployment( BO.getEmployment() );
-        userDTO.setAge( BO.getAge() );
-        userDTO.setStreet( BO.getStreet() );
-        if ( BO.getKids() != null ) {
-            userDTO.setKids( BO.getKids() );
-        }
-        if ( BO.getStudent() != null ) {
-            userDTO.setStudent( BO.getStudent() );
-        }
-        userDTO.setHoliday( BO.getHoliday() );
-        userDTO.setYearsOfEmployment( BO.getYearsOfEmployment() );
-        userDTO.setDeputy( userToDeputyDTO( BO.getDeputy() ) );
-        userDTO.setPriority( priorityToPriorityDTO( BO.getPriority() ) );
-        userDTO.setDistrict( districtToDistrictDTO( BO.getDistrict() ) );
-        userDTO.setRank( rankToRankDTO( BO.getRank() ) );
-        userDTO.setRoles( roleSetToRoleDTOSet( BO.getRoles() ) );
-        userDTO.setCalendars( calendarSetToCalendarDTOSet( BO.getCalendars() ) );
-
-        return userDTO;
-    }
-
-    @Override
     public List<UserDTO> toDTOs(List<User> BOs) {
         if ( BOs == null ) {
             return null;
@@ -157,6 +143,7 @@ public class UserMapperImpl implements UserMapper {
         User user = new User();
 
         user.setId( dto.getId() );
+        user.setCompany( dto.getCompany() );
         user.setFirstName( dto.getFirstName() );
         user.setLastName( dto.getLastName() );
         user.setEmail( dto.getEmail() );
@@ -178,6 +165,122 @@ public class UserMapperImpl implements UserMapper {
         return user;
     }
 
+    @Override
+    public UserDTO toDTO(User entity) {
+        if ( entity == null ) {
+            return null;
+        }
+
+        UserDTO userDTO = new UserDTO();
+
+        userDTO.setId( entity.getId() );
+        userDTO.setCompany( entity.getCompany() );
+        userDTO.setFirstName( entity.getFirstName() );
+        userDTO.setLastName( entity.getLastName() );
+        userDTO.setEmail( entity.getEmail() );
+        userDTO.setEmployment( entity.getEmployment() );
+        userDTO.setAge( entity.getAge() );
+        userDTO.setStreet( entity.getStreet() );
+        if ( entity.getKids() != null ) {
+            userDTO.setKids( entity.getKids() );
+        }
+        if ( entity.getStudent() != null ) {
+            userDTO.setStudent( entity.getStudent() );
+        }
+        userDTO.setHoliday( entity.getHoliday() );
+        userDTO.setYearsOfEmployment( entity.getYearsOfEmployment() );
+        userDTO.setDeputy( userToDeputyDTO( entity.getDeputy() ) );
+        userDTO.setPriority( priorityToPriorityDTO( entity.getPriority() ) );
+        userDTO.setDistrict( districtToDistrictDTO( entity.getDistrict() ) );
+        userDTO.setRank( rankToRankDTO( entity.getRank() ) );
+        userDTO.setRoles( roleSetToRoleDTOSet( entity.getRoles() ) );
+        userDTO.setCalendars( calendarSetToCalendarDTOSet( entity.getCalendars() ) );
+
+        return userDTO;
+    }
+
+    private XMLGregorianCalendar localDateToXmlGregorianCalendar( LocalDate localDate ) {
+        if ( localDate == null ) {
+            return null;
+        }
+
+        return datatypeFactory.newXMLGregorianCalendarDate(
+            localDate.getYear(),
+            localDate.getMonthValue(),
+            localDate.getDayOfMonth(),
+            DatatypeConstants.FIELD_UNDEFINED );
+    }
+
+    private XMLGregorianCalendar localDateTimeToXmlGregorianCalendar( LocalDateTime localDateTime ) {
+        if ( localDateTime == null ) {
+            return null;
+        }
+
+        return datatypeFactory.newXMLGregorianCalendar(
+            localDateTime.getYear(),
+            localDateTime.getMonthValue(),
+            localDateTime.getDayOfMonth(),
+            localDateTime.getHour(),
+            localDateTime.getMinute(),
+            localDateTime.getSecond(),
+            localDateTime.get( ChronoField.MILLI_OF_SECOND ),
+            DatatypeConstants.FIELD_UNDEFINED );
+    }
+
+    private static LocalDate xmlGregorianCalendarToLocalDate( XMLGregorianCalendar xcal ) {
+        if ( xcal == null ) {
+            return null;
+        }
+
+        return LocalDate.of( xcal.getYear(), xcal.getMonth(), xcal.getDay() );
+    }
+
+    private static LocalDateTime xmlGregorianCalendarToLocalDateTime( XMLGregorianCalendar xcal ) {
+        if ( xcal == null ) {
+            return null;
+        }
+
+        if ( xcal.getYear() != DatatypeConstants.FIELD_UNDEFINED
+            && xcal.getMonth() != DatatypeConstants.FIELD_UNDEFINED
+            && xcal.getDay() != DatatypeConstants.FIELD_UNDEFINED
+            && xcal.getHour() != DatatypeConstants.FIELD_UNDEFINED
+            && xcal.getMinute() != DatatypeConstants.FIELD_UNDEFINED
+        ) {
+            if ( xcal.getSecond() != DatatypeConstants.FIELD_UNDEFINED
+                && xcal.getMillisecond() != DatatypeConstants.FIELD_UNDEFINED ) {
+                return LocalDateTime.of(
+                    xcal.getYear(),
+                    xcal.getMonth(),
+                    xcal.getDay(),
+                    xcal.getHour(),
+                    xcal.getMinute(),
+                    xcal.getSecond(),
+                    Duration.ofMillis( xcal.getMillisecond() ).getNano()
+                );
+            }
+            else if ( xcal.getSecond() != DatatypeConstants.FIELD_UNDEFINED ) {
+                return LocalDateTime.of(
+                    xcal.getYear(),
+                    xcal.getMonth(),
+                    xcal.getDay(),
+                    xcal.getHour(),
+                    xcal.getMinute(),
+                    xcal.getSecond()
+                );
+            }
+            else {
+                return LocalDateTime.of(
+                    xcal.getYear(),
+                    xcal.getMonth(),
+                    xcal.getDay(),
+                    xcal.getHour(),
+                    xcal.getMinute()
+                );
+            }
+        }
+        return null;
+    }
+
     protected Calendar calendarDTOToCalendar(CalendarDTO calendarDTO) {
         if ( calendarDTO == null ) {
             return null;
@@ -186,6 +289,7 @@ public class UserMapperImpl implements UserMapper {
         Calendar calendar = new Calendar();
 
         calendar.setId( calendarDTO.getId() );
+        calendar.setCreatedAt( xmlGregorianCalendarToLocalDateTime( localDateToXmlGregorianCalendar( calendarDTO.getCreatedAt() ) ) );
         calendar.setTitle( calendarDTO.getTitle() );
         calendar.setStartDate( calendarDTO.getStartDate() );
         calendar.setEndDate( calendarDTO.getEndDate() );
@@ -433,6 +537,7 @@ public class UserMapperImpl implements UserMapper {
         calendarDTO.setStartDate( calendar.getStartDate() );
         calendarDTO.setEndDate( calendar.getEndDate() );
         calendarDTO.setStatus( calendar.getStatus() );
+        calendarDTO.setCreatedAt( xmlGregorianCalendarToLocalDate( localDateTimeToXmlGregorianCalendar( calendar.getCreatedAt() ) ) );
 
         return calendarDTO;
     }
