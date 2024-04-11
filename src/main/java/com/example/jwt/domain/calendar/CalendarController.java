@@ -47,17 +47,21 @@ public class CalendarController {
     @PostMapping(value = "/entry", consumes = "application/json")
     @PreAuthorize("hasAuthority('CAN_CREATE_ENTRY')")
     public ResponseEntity<CalendarDTO> entry(@Valid @RequestBody CalendarDTO calendarDTO, Authentication authentication) {
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        User user = userRepository.findById(userDetails.getUser().getId())
-                .orElseThrow(() -> new EntityNotFoundException("User not found"));
-        Calendar calendar = calendarService.calendarCreate(calendarMapper.fromCalendarDTO(calendarDTO), user);
-        user.getCalendars().add(calendar);
-        userService.save(user);
-        CalendarDTO responseDTO = calendarMapper.toDTO(calendar);
-        responseDTO.setUserId(user.getId());
-        responseDTO.setPriorityPoints(user.getPriority().getPoints());
+        try {
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            User user = userRepository.findById(userDetails.getUser().getId())
+                    .orElseThrow(() -> new EntityNotFoundException("User not found"));
+            Calendar calendar = calendarService.calendarCreate(calendarMapper.fromCalendarDTO(calendarDTO), user);
+            user.getCalendars().add(calendar);
+            userService.save(user);
+            CalendarDTO responseDTO = calendarMapper.toDTO(calendar);
+            responseDTO.setUserId(user.getId());
+            responseDTO.setPriorityPoints(user.getPriority().getPoints());
 
-        return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
+            return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
 

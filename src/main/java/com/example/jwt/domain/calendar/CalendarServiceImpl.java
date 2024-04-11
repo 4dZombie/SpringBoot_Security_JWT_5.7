@@ -189,7 +189,7 @@ public class CalendarServiceImpl extends ExtendedServiceImpl<Calendar> implement
         System.out.println("Entries with Deputy Conflicts: " + entriesWithDeputyConflicts.size());
         return entriesWithDeputyConflicts;
     }
-//TODO: After accepted or declined to not change status anymore DONE BUT NOT TESTED
+
     public List<Calendar> compareOverlappingEntiresWithAllEntries() {
         List<Calendar> allEntries = findAll();
         Map<UUID, Calendar> entriesById = allEntries.stream()
